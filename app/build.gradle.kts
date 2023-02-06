@@ -6,18 +6,18 @@ plugins {
 }
 
 android {
-    namespace = "no.nordicsemi.android.blinky"
+    namespace = "com.wisebee.autodoor"
     defaultConfig {
-        applicationId = "no.nordicsemi.android.nrfblinky"
+        applicationId = "com.wisebee.autodoor"
         resourceConfigurations.add("en")
     }
 }
 
 dependencies {
     implementation(project(":scanner"))
-    implementation(project(":blinky:spec"))
-    implementation(project(":blinky:ui"))
-    implementation(project(":blinky:ble"))
+    implementation(project(":autodoor:spec"))
+    implementation(project(":autodoor:ui"))
+    implementation(project(":autodoor:ble"))
 
     implementation(libs.nordic.theme)
     implementation(libs.nordic.navigation)

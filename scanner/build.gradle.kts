@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    namespace = "no.nordicsemi.android.blinky.scanner"
+    namespace = "com.wisebee.autodoor.scanner"
 }
 
 dependencies {
-    implementation(project(":blinky:spec"))
-    implementation(project(":blinky:ui"))
+    implementation(project(":autodoor:spec"))
+    implementation(project(":autodoor:ui"))
 
     implementation(libs.nordic.uiscanner)
     implementation(libs.nordic.navigation)

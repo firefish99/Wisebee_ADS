@@ -16,21 +16,21 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from("no.nordicsemi.android.gradle:version-catalog:1.2.1")
+            from("no.nordicsemi.android.gradle:version-catalog:1.2.2")
         }
     }
 }
-rootProject.name = "nRF Blinky"
+rootProject.name = "Wisebee_ADS"
 
 include(":app")
 include(":scanner")
-include(":blinky:spec")
-include(":blinky:ui")
-include(":blinky:ble")
+include(":autodoor:spec")
+include(":autodoor:ui")
+include(":autodoor:ble")
 
-//if (file("../Android-Common-Libraries").exists()) {
-//    includeBuild("../Android-Common-Libraries")
-//}
+if (file("../Android-Common-Libraries").exists()) {
+    includeBuild("../Android-Common-Libraries")
+}
 //if (file("../Android-BLE-Library").exists()) {
 //    includeBuild("../Android-BLE-Library")
 //}
