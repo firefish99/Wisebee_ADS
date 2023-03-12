@@ -3,24 +3,28 @@ package com.wisebee.autodoor.control
 import android.bluetooth.BluetoothDevice
 import android.os.Parcelable
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.wisebee.autodoor.control.view.AutoDoorScreen
 import kotlinx.parcelize.Parcelize
-import com.wisebee.autodoor.control.view.BlinkyScreen
 import no.nordicsemi.android.common.navigation.createDestination
 import no.nordicsemi.android.common.navigation.defineDestination
 import no.nordicsemi.android.common.navigation.viewmodel.SimpleNavigationViewModel
 
-val Blinky = createDestination<BlinkyDevice, Unit>("blinky")
+val AutoDoor = createDestination<AutoDoorDevice, Unit>("AutoDoor")
 
 @Parcelize
-data class BlinkyDevice(
+data class AutoDoorDevice(
     val device: BluetoothDevice,
     val name: String?,
+    val pw: String,
 ): Parcelable
 
-val BlinkyDestination = defineDestination(Blinky) {
+val AutoDoorDestination = defineDestination(AutoDoor) {
     val viewModel: SimpleNavigationViewModel = hiltViewModel()
 
-    BlinkyScreen(
-        onNavigateUp = { viewModel.navigateUp() }
+    val doorDevice = viewModel.parameterOf(AutoDoor)
+
+    AutoDoorScreen(
+        onNavigateUp = { viewModel.navigateUp() },
+        password = doorDevice.pw
     )
 }

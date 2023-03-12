@@ -2,11 +2,10 @@ package com.wisebee.autodoor.control.repository
 
 import android.content.Context
 import android.net.Uri
+import com.wisebee.autodoor.spec.AutoDoor
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.onEach
-import com.wisebee.autodoor.spec.AutoDoor
-import no.nordicsemi.android.log.LogContract
+import kotlinx.coroutines.flow.StateFlow
 import no.nordicsemi.android.log.timber.nRFLoggerTree
 import timber.log.Timber
 import javax.inject.Inject
@@ -17,7 +16,7 @@ import javax.inject.Named
  * @param context The application context.
  * @param deviceId The device ID.
  * @param deviceName The name of the Blinky device, as advertised.
- * @property autoDoor The Blinky implementation.
+ * @property autoDoor The AutoDoor implementation.
  */
 class AutoDoorRepository @Inject constructor(
     @ApplicationContext context: Context,
@@ -38,27 +37,11 @@ class AutoDoorRepository @Inject constructor(
             .also { sessionUri = it.session?.sessionUri }
     }
 
-    val loggedLedState: Flow<Boolean>
-        get() = autoDoor.ledState.onEach {
-            // Although Timber log levels are the same as LogCat's, nRF Logger has its own.
-            // All standard log levels are mapped to the corresponding nRF Logger's levels:
-            // https://github.com/NordicSemiconductor/nRF-Logger-API/blob/f90d5834c46cc2057b6a9f39dcbb8f2f2dd45d56/log-timber/src/main/java/no/nordicsemi/android/log/timber/nRFLoggerTree.java#L104
-            // However, in order to log in nRF Logger on APPLICATION level, we need to use
-            // that level explicitly.
-            when(it) {
-                true -> Timber.log(LogContract.Log.Level.APPLICATION, "LED turned ON")
-                false -> Timber.log(LogContract.Log.Level.APPLICATION, "LED turned OFF")
-            }
-        }
+    val loggedDisplayView: Flow<AutoDoor.DisplayView>
+        get() = autoDoor.displayView
 
-    val loggedButtonState: Flow<Boolean>
-        get() = autoDoor.buttonState.onEach {
-            // The same applies here.
-            when(it) {
-                true -> Timber.log(LogContract.Log.Level.APPLICATION, "Button pressed")
-                false -> Timber.log(LogContract.Log.Level.APPLICATION, "Button released")
-            }
-        }
+    val loggedRxPacket: StateFlow<ByteArray>
+        get() = autoDoor.rxPacket
 
     override fun release() {
         Timber.uproot(tree)

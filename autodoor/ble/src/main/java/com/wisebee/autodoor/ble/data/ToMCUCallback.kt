@@ -5,7 +5,7 @@ import no.nordicsemi.android.ble.callback.profile.ProfileReadResponse
 import no.nordicsemi.android.ble.data.Data
 import timber.log.Timber
 
-abstract class LedCallback: ProfileReadResponse() {
+abstract class ToMCUCallback: ProfileReadResponse() {
 
     open fun byteArrayToHexString(bytes: ByteArray?): String? {
         val builder = StringBuilder()

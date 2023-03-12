@@ -3,9 +3,8 @@ package com.wisebee.autodoor.ble.data
 import android.bluetooth.BluetoothDevice
 import no.nordicsemi.android.ble.callback.profile.ProfileReadResponse
 import no.nordicsemi.android.ble.data.Data
-import timber.log.Timber
 
-abstract class ButtonCallback: ProfileReadResponse() {
+abstract class FromMCUCallback: ProfileReadResponse() {
 
     open fun byteArrayToHexString(bytes: ByteArray?): String? {
         val builder = StringBuilder()
@@ -19,7 +18,15 @@ abstract class ButtonCallback: ProfileReadResponse() {
     }
 
     override fun onDataReceived(device: BluetoothDevice, data: Data) {
-        Timber.tag("ButtonCallback").e("%d:%s", data.size(), byteArrayToHexString(data.value));
+        //Timber.tag("ButtonCallback").e("%d:%s", data.size(), byteArrayToHexString(data.value));
+
+        //onDoorStateChanged(device, data.getIntValue(Data.FORMAT_UINT8, 2) ?: 0)
+        onRxPacket(device, data.value!!)
+        /*
+        when(data.getByte(0)) {
+            DataToMCU.FID_STATUS -> onDoorStateChanged(device, data.getIntValue(Data.FORMAT_UINT8, 2) ?: 0)
+            else -> onRxPacket(device, data.value!!)
+        }*/
 
         /*
         if (data.size() == 1) {
@@ -30,5 +37,7 @@ abstract class ButtonCallback: ProfileReadResponse() {
         }*/
     }
 
-    abstract fun onButtonStateChanged(device: BluetoothDevice, state: Boolean)
+    abstract fun onDoorStateChanged(device: BluetoothDevice, state: Int)
+
+    abstract fun onRxPacket(device: BluetoothDevice, data: ByteArray)
 }

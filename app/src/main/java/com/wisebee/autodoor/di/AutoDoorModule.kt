@@ -3,6 +3,10 @@ package com.wisebee.autodoor.di
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
+import com.wisebee.autodoor.ble.AutoDoorManager
+import com.wisebee.autodoor.spec.AutoDoor
+import com.wisebee.autodoor.spec.AutoDoorSpec
+import com.wisebee.autodoor.spec.R
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -10,11 +14,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
-import com.wisebee.autodoor.ble.AutoDoorManager
-import com.wisebee.autodoor.control.Blinky
-import com.wisebee.autodoor.spec.AutoDoor
-import com.wisebee.autodoor.spec.R
-import no.nordicsemi.android.common.navigation.get
 import javax.inject.Named
 
 @Suppress("unused")
@@ -27,7 +26,8 @@ abstract class AutoDoorModule {
         @Provides
         @ViewModelScoped
         fun provideBluetoothDevice(handle: SavedStateHandle): BluetoothDevice {
-            return handle.get(Blinky).device
+            //return handle.get(AutoDoor).device
+            return AutoDoorSpec.bleDevice!!
         }
 
         @Provides
@@ -37,7 +37,8 @@ abstract class AutoDoorModule {
             @ApplicationContext context: Context,
             handle: SavedStateHandle,
         ): String {
-            return handle.get(Blinky).name ?: context.getString(R.string.unnamed_device)
+            //return handle.get(AutoDoor).name ?: context.getString(R.string.unnamed_device)
+            return AutoDoorSpec.bleName ?: context.getString(R.string.unnamed_device)
         }
 
         @Provides
@@ -49,7 +50,7 @@ abstract class AutoDoorModule {
 
         @Provides
         @ViewModelScoped
-        fun provideBlinkyManager(
+        fun provideAutoDoorManager(
             @ApplicationContext context: Context,
             device: BluetoothDevice,
         ) = AutoDoorManager(context, device)
@@ -57,8 +58,8 @@ abstract class AutoDoorModule {
     }
 
     @Binds
-    abstract fun bindBlinky(
-        BlinkManager: AutoDoorManager
+    abstract fun bindAutoDoor(
+        AdsManager: AutoDoorManager
     ): AutoDoor
 
 }

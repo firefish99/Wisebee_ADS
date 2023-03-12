@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="action_cancel">Cancel</string>
-    <string name="action_retry">Retry</string>
+    <string name="app_version">1.0.0</string>
 
-    <string name="blinky_led">LED</string>
-    <string name="blinky_led_descr">Switch to toggle the LED</string>
+    <string name="action_cancel">취소</string>
+    <string name="action_retry">재시도</string>
+    <string name="action_back">돌아가기</string>
 
-    <string name="blinky_button">Button</string>
-    <string name="blinky_button_descr">The button state</string>
-    <string name="blinky_on">ON</string>
-    <string name="blinky_off">OFF</string>
+    <string name="ads_led">LED</string>
+    <string name="ads_led_descr">Switch to toggle the LED</string>
+
+    <string name="ads_button">Button</string>
+    <string name="ads_button_descr">The button state</string>
+    <string name="ads_on">ON</string>
+    <string name="ads_off">OFF</string>
+
+    <string name="sts_connected">연결됨</string>
+
+    <string name="authorizing_title">확인중</string>
+    <string name="authorizing_text">비밀번호를 확인중입니다.</string>
+    <string name="authorizing_wait">잠시만 기다려 주십시오.</string>
+    <string name="authorize_fail_title">인증 실패</string>
+    <string name="authorize_fail_text1">비밀번호 인증에 실패했습니다.</string>
+    <string name="authorize_fail_text2">정확한 비밀번호를 입력해 주십시오.</string>
 </resources>

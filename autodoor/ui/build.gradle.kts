@@ -11,6 +11,7 @@ android {
 
 dependencies {
     implementation(project(":autodoor:spec"))
+    implementation(project(":autodoor:ble"))
 
     implementation(libs.nordic.theme)
     implementation(libs.nordic.uilogger)

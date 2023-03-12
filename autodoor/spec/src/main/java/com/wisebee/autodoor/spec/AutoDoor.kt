@@ -10,35 +10,53 @@ interface AutoDoor {
         NOT_AVAILABLE
     }
 
-    /**
-     * Connects to the device.
-     */
+    enum class AuthorizedPw {
+        PREPARE,
+        REQUESTED,
+        SUCCESS,
+        FAIL
+    }
+
+    enum class DisplayView {
+        VIEW_MAIN,
+        VIEW_USER_MODE,
+        VIEW_VERSION,
+        VIEW_OPER_STAT,
+        VIEW_CHANGE_MODE,
+        VIEW_RENAME_DEVICE,
+        VIEW_USER_PARAM,
+        VIEW_CHANGE_PW,
+        VIEW_ADMIN_AUTH,
+        VIEW_ADMIN_MODE,
+        VIEW_ADMIN_PARAM,
+        VIEW_CALIBRATION,
+        VIEW_UPDATE,
+        VIEW_OPER_INIT,
+        VIEW_TEST_MODE,
+        VIEW_INIT_TIME,
+        VIEW_SENSOR_ENABLE,
+        VIEW_TOF,
+        VIEW_RADAR,
+        VIEW_MAIN_BLE,
+        VIEW_DCM,
+        VIEW_BLDC,
+        VIEW_HLED,
+        VIEW_TIME
+    }
+
     suspend fun connect()
 
-    /**
-     * Disconnects from the device.
-     */
     fun release()
 
-    /**
-     * The current state of the blinky.
-     */
     val state: StateFlow<State>
 
-    /**
-     * The current state of the LED.
-     */
-    val ledState: StateFlow<Boolean>
+    val displayView: StateFlow<DisplayView>
+    fun setDisplay(view: DisplayView)
 
-    /**
-     * The current state of the button.
-     */
-    val buttonState: StateFlow<Boolean>
+    val rxPacket: StateFlow<ByteArray>
 
-    /**
-     * Controls the LED state.
-     *
-     * @param state the new state of the LED.
-     */
-    suspend fun turnLed(state: Boolean)
+    suspend fun commandDoor(cmd: Byte)
+    suspend fun sendCommand(fid: Byte, data: ByteArray)
+    suspend fun getStatus(fid: Byte)
+    suspend fun getStatus(fid: Byte, flag:Byte)
 }
