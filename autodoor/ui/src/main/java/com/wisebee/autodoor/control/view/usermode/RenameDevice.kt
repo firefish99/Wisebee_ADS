@@ -1,4 +1,4 @@
-package com.wisebee.autodoor.control.view
+package com.wisebee.autodoor.control.view.usermode
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -40,10 +40,14 @@ internal fun RenameDeviceView() {
     var nMode by remember { mutableStateOf(0) }
     var sDeviceName by remember { mutableStateOf("") }
     var sPassword by remember { mutableStateOf("") }
-    if(packet.value[0] == DataToMCU.FID_APP_RENAME_DEVICE && packet.value[1].toInt() >= (20 + 1 + 2)) {
+    var bPressed by remember { mutableStateOf( false ) }
+    if(packet.value[0] == DataToMCU.FID_APP_RENAME_DEVICE) {
         packet.value[0] = DataToMCU.FID_APP_NONE
-        nMode = packet.value[2].toInt()
-        sDeviceName = String(packet.value, 3, 20).substringBefore('\u0000')
+        bPressed = false
+        if(packet.value[1].toInt() >= (20 + 1 + 2)) {
+            nMode = packet.value[2].toInt()
+            sDeviceName = String(packet.value, 3, 20).substringBefore('\u0000')
+        }
     }
     //Timber.tag("RenameDeviceView").e("name=$sDeviceName")
 
@@ -135,14 +139,14 @@ internal fun RenameDeviceView() {
 
         Button(
             colors = ButtonDefaults.buttonColors(
-                containerColor = WbTheme.setButtonContainer,
-                contentColor = WbTheme.setButtonContent),
+                containerColor = WbTheme.getButtonContainer(bPressed),
+                contentColor = WbTheme.getButtonContent(bPressed)),
             enabled = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 100.dp)
-                .padding(bottom = 20.dp),
+                .padding(horizontal = 100.dp),
             onClick = {
+                bPressed = true
                 val aName = ByteArray(20).let { dest ->
                     sDeviceName.toByteArray().let { src ->
                         src.copyInto(dest, 0, 0, Integer.min(20, src.size))

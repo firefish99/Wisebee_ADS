@@ -14,10 +14,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.wisebee.autodoor.control.view.adminmode.*
+import com.wisebee.autodoor.control.view.adminparam.*
+import com.wisebee.autodoor.control.view.usermode.*
 import com.wisebee.autodoor.control.viewmodel.AutoDoorViewModel
 import com.wisebee.autodoor.spec.AutoDoor
 import com.wisebee.autodoor.spec.AutoDoorSpec
-import timber.log.Timber
 
 @Composable
 internal fun AutoDoorMainView(
@@ -26,12 +28,12 @@ internal fun AutoDoorMainView(
     val viewModel: AutoDoorViewModel = hiltViewModel()
     val displayView by viewModel.displayView.collectAsStateWithLifecycle()
 
-    Timber.tag("AutoDoorMainView").e("name=%s", viewModel.deviceName)
+    //Timber.tag("AutoDoorMainView").e("name=%s", viewModel.deviceName)
     Column(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                //.fillMaxSize()
-                .widthIn(max = 460.dp)
+                .fillMaxSize()
+                //.widthIn(max = 460.dp)
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
                 .padding(top = 10.dp)
@@ -58,7 +60,20 @@ internal fun AutoDoorMainView(
                 AutoDoor.DisplayView.VIEW_CHANGE_PW -> ChangePWView()
                 AutoDoor.DisplayView.VIEW_ADMIN_AUTH -> AdminAuthView()
                 AutoDoor.DisplayView.VIEW_ADMIN_MODE -> AdminModeView()
+                AutoDoor.DisplayView.VIEW_CALIBRATION -> CalibrationView()
+                AutoDoor.DisplayView.VIEW_UPDATE -> UpdateView()
+                AutoDoor.DisplayView.VIEW_OPER_INIT -> OperInitView()
+                AutoDoor.DisplayView.VIEW_TEST_MODE -> TestModeView()
                 AutoDoor.DisplayView.VIEW_ADMIN_PARAM -> AdminParamView()
+                AutoDoor.DisplayView.VIEW_INITIAL_TIME -> InitialTimeView()
+                AutoDoor.DisplayView.VIEW_SENSOR_ENABLE -> SensorEnableView()
+                AutoDoor.DisplayView.VIEW_TOF1 -> TOFParamView(0)
+                AutoDoor.DisplayView.VIEW_TOF2 -> TOFParamView(1)
+                AutoDoor.DisplayView.VIEW_RADAR -> RadarParamView()
+                AutoDoor.DisplayView.VIEW_MAIN_BLE -> ControllerBLEView()
+                AutoDoor.DisplayView.VIEW_DCM -> DCMParamView()
+                AutoDoor.DisplayView.VIEW_BLDC -> BLDCParamView()
+                AutoDoor.DisplayView.VIEW_HLED -> HLEDView()
                 else -> {}
             }
         }

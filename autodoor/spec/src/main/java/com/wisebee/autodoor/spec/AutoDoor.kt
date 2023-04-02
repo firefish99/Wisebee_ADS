@@ -33,15 +33,15 @@ interface AutoDoor {
         VIEW_UPDATE,
         VIEW_OPER_INIT,
         VIEW_TEST_MODE,
-        VIEW_INIT_TIME,
+        VIEW_INITIAL_TIME,
         VIEW_SENSOR_ENABLE,
-        VIEW_TOF,
+        VIEW_TOF1,
+        VIEW_TOF2,
         VIEW_RADAR,
         VIEW_MAIN_BLE,
         VIEW_DCM,
         VIEW_BLDC,
         VIEW_HLED,
-        VIEW_TIME
     }
 
     suspend fun connect()
@@ -57,6 +57,6 @@ interface AutoDoor {
 
     suspend fun commandDoor(cmd: Byte)
     suspend fun sendCommand(fid: Byte, data: ByteArray)
-    suspend fun getStatus(fid: Byte)
-    suspend fun getStatus(fid: Byte, flag:Byte)
+    suspend fun sendCommand(fid: Byte)
+    suspend fun sendCommand(fid: Byte, flag:Byte)
 }

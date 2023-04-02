@@ -69,17 +69,17 @@ class AutoDoorViewModel @Inject constructor(
         }
     }
 
-    fun getStatus(fid: Byte) {
+    fun sendCommand(fid: Byte) {
         val exceptionHandler = CoroutineExceptionHandler { _, _ -> }
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
-            repository.getStatus(fid)
+            repository.sendCommand(fid)
         }
     }
 
-    fun getStatus(fid: Byte, flag: Byte) {
+    fun sendCommand(fid: Byte, flag: Byte) {
         val exceptionHandler = CoroutineExceptionHandler { _, _ -> }
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
-            repository.getStatus(fid, flag)
+            repository.sendCommand(fid, flag)
         }
     }
 

@@ -21,4 +21,22 @@ object WbTheme {
         @Composable
         @ReadOnlyComposable
         get() = Color(0xff444444)
+    private val setButtonContainerPressed : Color
+        @Composable
+        @ReadOnlyComposable
+        get() = Color(0xff7f6000)
+    private val setButtonContentPressed : Color
+        @Composable
+        @ReadOnlyComposable
+        get() = Color(0xff222222)
+
+    @Composable
+    fun getButtonContainer(bPressed : Boolean) : Color {
+        return if(bPressed) setButtonContainerPressed else setButtonContainer
+    }
+
+    @Composable
+    fun getButtonContent(bPressed : Boolean) : Color {
+        return if(bPressed) setButtonContentPressed else setButtonContent
+    }
 }

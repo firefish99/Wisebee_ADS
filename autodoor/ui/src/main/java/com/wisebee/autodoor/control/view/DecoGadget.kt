@@ -8,15 +8,16 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wisebee.autodoor.control.R
@@ -24,16 +25,46 @@ import com.wisebee.autodoor.control.WbTheme
 import no.nordicsemi.android.common.theme.NordicTheme
 
 @Composable
-internal fun RefreshButton() {
-    Image(
-        painter = painterResource(id = R.drawable.ic_refresh),
-        contentDescription = "다시 불러오기",
-        modifier = Modifier
-            .padding(4.dp)
-            .width(30.dp)
+internal fun RefreshButton(onClick : () -> Unit = { }) {
+    Box( modifier = Modifier .clickable { onClick() } ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_refresh),
+            contentDescription = "다시 불러오기",
+            modifier = Modifier
+                .padding(4.dp)
+                .width(30.dp)
+                .height(30.dp)
+                .border(width = 1.dp, color = Color(0xff00a9ce))
+        )
+    }
+}
+
+@Composable
+internal fun StartButton(
+    modifier: Modifier = Modifier,
+    button: String = "",
+    pressed: Boolean = false,
+    onClick : () -> Unit = { },
+) {
+    Box(
+        modifier = modifier
+            .background(
+                color = WbTheme.getButtonContainer(pressed),
+                shape = RoundedCornerShape(10.dp)
+            )
+            .padding(horizontal = 10.dp, vertical = 4.dp)
+            .wrapContentWidth()
+            //.wrapContentHeight()
             .height(30.dp)
-            .border(width = 1.dp, color = Color(0xff00a9ce))
-    )
+            .clickable { onClick() },
+        contentAlignment = Alignment.CenterStart
+    ) {
+        Text(
+            text = button,
+            fontSize = 16.sp,
+            color = WbTheme.getButtonContent(pressed),
+        )
+    }
 }
 
 @Composable
@@ -41,12 +72,18 @@ internal fun ParamInput(
     modifier: Modifier = Modifier,
     name: String = "",
     value: Int = 0,
-    button: String = "",
+    button: String = "전 송",
+    pressed: Boolean = false,
     onClick : () -> Unit = { },
-    onValueChange : (Float) -> Unit = { },
     valueRange :  ClosedFloatingPointRange<Float> = 0f..10f,
-    steps : Int = 0,
+    unit : Int = 1,
+    steps : Int = -1,
+    onValueChange : (Float) -> Unit = { },
 ) {
+    val lsteps = if(unit == 1) 0
+                else if(steps != -1) steps
+                else ((valueRange.endInclusive - valueRange.start) / unit).toInt() - 1
+
     Column (
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy((-15).dp),
@@ -55,18 +92,19 @@ internal fun ParamInput(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(start = 10.dp, end = 10.dp),
+                .padding(horizontal = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "${name}${value}", fontSize = 18.sp,
+                text = "$name : $value", fontSize = 18.sp,
                 modifier = Modifier
                     .wrapContentWidth()
             )
             Box(
                 modifier = Modifier
-                    .background(color = WbTheme.setButtonContainer,
+                    .background(
+                        color = WbTheme.getButtonContainer(pressed),
                         shape = RoundedCornerShape(10.dp)
                     )
                     .padding(horizontal = 10.dp, vertical = 4.dp)
@@ -80,7 +118,7 @@ internal fun ParamInput(
                 Text(
                     text = button,
                     fontSize = 16.sp,
-                    color = WbTheme.setButtonContent,
+                    color = WbTheme.getButtonContent(pressed),
                 )
             }
         }
@@ -95,12 +133,178 @@ internal fun ParamInput(
                     onValueChange(it)
             },
             valueRange = valueRange,
-            steps = steps,
+            steps = lsteps,
             interactionSource = interactionSource,
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun SimpleParamInput(
+    modifier: Modifier = Modifier,
+    name: String = "",
+    value: Int = 0,
+    valueRange :  ClosedFloatingPointRange<Float> = 0f..10f,
+    unit : Int = 1,
+    steps : Int = -1,
+    onValueChange : (Float) -> Unit = { },
+) {
+    val lsteps = if(unit == 1) 0
+                else if(steps != -1) steps
+                else ((valueRange.endInclusive - valueRange.start) / unit.toFloat()).toInt() - 1
+
+    Column (
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy((-22).dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(horizontal = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "$name : $value", fontSize = 16.sp,
+                modifier = Modifier
+                    .wrapContentWidth()
+            )
+        }
+
+        val interactionSource = remember { MutableInteractionSource() }
+        val dragged = interactionSource.collectIsDraggedAsState()
+
+        Slider(
+            value = value.toFloat(),
+            onValueChange = {
+                if(dragged.value)
+                    onValueChange(it)
+            },
+            valueRange = valueRange,
+            steps = lsteps,
+            interactionSource = interactionSource,
+            thumb = remember(interactionSource) { {
+                SliderDefaults.Thumb(
+                    modifier = Modifier.padding(top = 3.dp),
+                    interactionSource = interactionSource,
+                    colors = SliderDefaults.colors(),
+                    thumbSize = DpSize(15.dp, 15.dp),
+                    enabled = true
+                )
+            } },
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun ChirpParamInput(
+    modifier: Modifier = Modifier,
+    name: String = "램프 지속 시간",
+    value: Int = 220,
+    valueRange :  ClosedFloatingPointRange<Float> = 220f..4400f,
+    steps : Int = 1,
+    onValueChange : (Float) -> Unit = { },
+) {
+    Column (
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy((-22).dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(horizontal = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "$name : $value",// + if(value == 2310) 1100 else value,
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .wrapContentWidth()
+            )
+        }
+
+        val interactionSource = remember { MutableInteractionSource() }
+        val dragged = interactionSource.collectIsDraggedAsState()
+
+        Slider(
+            value = (if(value == 1100) 2310 else value).toFloat(),
+            onValueChange = {
+                if(dragged.value)
+                    onValueChange(it)
+            },
+            valueRange = valueRange,
+            steps = steps,
+            interactionSource = interactionSource,
+            thumb = remember(interactionSource) { {
+                SliderDefaults.Thumb(
+                    modifier = Modifier.padding(top = 3.dp),
+                    interactionSource = interactionSource,
+                    colors = SliderDefaults.colors(),
+                    thumbSize = DpSize(15.dp, 15.dp),
+                    enabled = true
+                )
+            } },
+        )
+    }
+}
+
+@Composable
+internal fun ParamSwitch(
+    modifier: Modifier = Modifier,
+    name: String = "",
+    value: Boolean = false,
+    onCheckedChange : (Boolean) -> Unit = { },
+) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(horizontal = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = name, fontSize = 16.sp,
+                modifier = Modifier
+                    .wrapContentWidth()
+            )
+            Switch(checked = value, onCheckedChange = onCheckedChange)
+        }
+}
+
+@Composable
+internal fun SimpleParamDisplay(
+    modifier: Modifier = Modifier,
+    name: String = "",
+    value: String = "",
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(horizontal = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = name, fontSize = 16.sp,
+            modifier = Modifier
+                .wrapContentWidth()
+        )
+        Text(
+            text = value, fontSize = 16.sp,
+            modifier = Modifier
+                .wrapContentWidth()
+        )
+    }
+}
+
+/*
 @Preview
 @Composable
 private fun RefreshButtonPreview() {
@@ -111,8 +315,47 @@ private fun RefreshButtonPreview() {
 
 @Preview
 @Composable
+private fun StartButtonPreview() {
+    NordicTheme {
+        StartButton(button = "시작")
+    }
+}
+
+@Preview
+@Composable
 private fun ParamInputPreview() {
     NordicTheme {
-        ParamInput(name = "Test : ", button = "Send", steps = 10)
+        ParamInput(name = "Test", steps = 10)
+    }
+}
+ */
+
+@Preview
+@Composable
+private fun SimpleParamInputPreview() {
+    val nParamValue = remember {
+        mutableStateOf( 1100 )
+    }
+
+    NordicTheme {
+        Column {
+            RefreshButton()
+            Spacer(modifier = Modifier.padding(horizontal = 20.dp))
+            StartButton(button = "시작")
+            Spacer(modifier = Modifier.padding(horizontal = 20.dp))
+            ParamInput(name = "문닫힘대기 시간", value = 1000, unit = 200, valueRange = 0f..2000f)
+            Spacer(modifier = Modifier.padding(horizontal = 20.dp))
+            SimpleParamInput(name = "문닫힘대기 시간", value = 500, unit = 100, valueRange = 100f..2000f)
+            Spacer(modifier = Modifier.padding(horizontal = 20.dp))
+            ParamSwitch(name = "워치독 활성화", value = true)
+            ParamSwitch(name = "워치독 활성화", value = false)
+            Spacer(modifier = Modifier.padding(horizontal = 20.dp))
+            SimpleParamDisplay(name = "측정 거리 값", value="1000")
+            Spacer(modifier = Modifier.padding(horizontal = 20.dp))
+            ChirpParamInput(value = nParamValue.value) {
+                val value = it.toInt()
+                nParamValue.value = if(value == 2310) 1100 else value
+            }
+        }
     }
 }

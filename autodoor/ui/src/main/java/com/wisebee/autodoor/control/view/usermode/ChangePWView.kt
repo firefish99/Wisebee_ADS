@@ -1,4 +1,4 @@
-package com.wisebee.autodoor.control.view
+package com.wisebee.autodoor.control.view.usermode
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -39,9 +39,12 @@ internal fun ChangePWView() {
     var nMode by remember { mutableStateOf(0) }
     var sOldPassword by remember { mutableStateOf("") }
     var sNewPassword by remember { mutableStateOf("") }
-    if(packet.value[0] == DataToMCU.FID_APP_CHANGE_PW && packet.value[1].toInt() >= (1 + 2)) {
+    var bPressed by remember { mutableStateOf( false ) }
+    if(packet.value[0] == DataToMCU.FID_APP_CHANGE_PW) {
         packet.value[0] = DataToMCU.FID_APP_NONE
-        nMode = packet.value[2].toInt()
+        bPressed = false
+        if(packet.value[1].toInt() >= (1 + 2))
+            nMode = packet.value[2].toInt()
     }
     //Timber.tag("ChangePWView").e("nMode=$nMode")
 
@@ -134,14 +137,14 @@ internal fun ChangePWView() {
 
         Button(
             colors = ButtonDefaults.buttonColors(
-                containerColor = WbTheme.setButtonContainer,
-                contentColor = WbTheme.setButtonContent),
+                containerColor = WbTheme.getButtonContainer(bPressed),
+                contentColor = WbTheme.getButtonContent(bPressed)),
             enabled = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 100.dp)
-                .padding(bottom = 20.dp),
+                .padding(horizontal = 100.dp),
             onClick = {
+                bPressed = true
                 val aOld = ByteArray(6).let { dest ->
                     sOldPassword.toByteArray().let { src ->
                         src.copyInto(dest, 0, 0, Integer.min(6, src.size))

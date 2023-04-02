@@ -1,4 +1,4 @@
-package com.wisebee.autodoor.control.view
+package com.wisebee.autodoor.control.view.adminmode
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
@@ -17,14 +17,14 @@ import com.wisebee.autodoor.spec.AutoDoor
 import no.nordicsemi.android.common.theme.NordicTheme
 
 @Composable
-internal fun UserModeView() {
+internal fun AdminModeView() {
     val viewModel: AutoDoorViewModel = hiltViewModel()
-    //Timber.tag("UserModeView").e("start")
+    //Timber.tag("AdminModeView").e("start")
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text(text = "사용자 모드", fontSize = 25.sp,
+        Text(text = "관리자 모드", fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .align(alignment = Alignment.CenterHorizontally)
@@ -36,8 +36,7 @@ internal fun UserModeView() {
                 .fillMaxWidth()
                 .padding(horizontal = 50.dp),
             onClick = {
-                viewModel.getStatus(DataToMCU.FID_APP_USER_PARAM, DataToMCU.CMD_GET_USER_PARAM)
-                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_USER_PARAM)
+                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_ADMIN_PARAM)
             },
         ) { Text(text = "기능설정변경", fontSize = 20.sp) }
         Button(
@@ -46,56 +45,46 @@ internal fun UserModeView() {
                 .fillMaxWidth()
                 .padding(horizontal = 50.dp),
             onClick = {
-                viewModel.getStatus(DataToMCU.FID_APP_CHANGE_MODE, DataToMCU.CMD_GET_MODE)
-                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_CHANGE_MODE)
+                viewModel.sendCommand(DataToMCU.FID_APP_SENSOR_CALIB, DataToMCU.CMD_GET_CALIB)
+                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_CALIBRATION)
             },
-        ) { Text(text = "자동모드 / 수동모드", fontSize = 20.sp) }
+        ) { Text(text = "센서 캘리브레이션", fontSize = 20.sp) }
         Button(
             enabled = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 50.dp),
             onClick = {
-                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_CHANGE_PW)
+                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_UPDATE)
             },
-        ) { Text(text = "블루투스 비밀번호", fontSize = 20.sp) }
+        ) { Text(text = "업데이트 및 초기화", fontSize = 20.sp) }
         Button(
             enabled = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 50.dp),
             onClick = {
-                viewModel.getStatus(DataToMCU.FID_APP_RENAME_DEVICE, DataToMCU.CMD_GET_NAME)
-                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_RENAME_DEVICE)
+                viewModel.sendCommand(DataToMCU.FID_APP_OPER_STAT)
+                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_OPER_INIT)
             },
-        ) { Text(text = "장치이름 변경", fontSize = 20.sp) }
+        ) { Text(text = "운행조회 및 초기화", fontSize = 20.sp) }
         Button(
             enabled = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 50.dp),
             onClick = {
-                viewModel.getStatus(DataToMCU.FID_APP_OPER_STAT)
-                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_OPER_STAT)
+                viewModel.sendCommand(DataToMCU.FID_APP_TEST_MODE, DataToMCU.CMD_GET_TEST_MODE)
+                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_TEST_MODE)
             },
-        ) { Text(text = "운행 조회", fontSize = 20.sp) }
-        Button(
-            enabled = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 50.dp),
-            onClick = {
-                viewModel.getStatus(DataToMCU.FID_APP_VERSION)
-                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_VERSION)
-            },
-        ) { Text(text = "Version 정보", fontSize = 20.sp) }
+        ) { Text(text = "테스트 모드", fontSize = 20.sp) }
     }
 }
 
 @Preview
 @Composable
-private fun UserModeViewPreview() {
+private fun AdminModeViewPreview() {
     NordicTheme {
-        UserModeView()
+        AdminModeView()
     }
 }

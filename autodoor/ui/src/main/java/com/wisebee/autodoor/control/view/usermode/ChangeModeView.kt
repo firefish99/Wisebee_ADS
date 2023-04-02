@@ -1,4 +1,4 @@
-package com.wisebee.autodoor.control.view
+package com.wisebee.autodoor.control.view.usermode
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.RadioButton
@@ -85,7 +85,7 @@ internal fun ChangeModeView() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 40.dp)
+                .padding(top = 10.dp, bottom = 0.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,

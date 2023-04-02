@@ -1,4 +1,4 @@
-package com.wisebee.autodoor.control.view
+package com.wisebee.autodoor.control.view.adminmode
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -35,10 +35,14 @@ internal fun AdminAuthView() {
     val packet = viewModel.rxPacket.collectAsStateWithLifecycle()
     var nMode by remember { mutableStateOf(1) }
     var sPassword by remember { mutableStateOf("") }
-    if(packet.value[0] == DataToMCU.FID_APP_AUTH_ADMIN_PW && packet.value[1].toInt() >= (1 + 2)) {
+    var bPressed by remember { mutableStateOf( false ) }
+    if(packet.value[0] == DataToMCU.FID_APP_AUTH_ADMIN_PW) {
         packet.value[0] = DataToMCU.FID_APP_NONE
-        nMode = packet.value[2].toInt()
-        if(nMode == 1) viewModel.setDisplay(AutoDoor.DisplayView.VIEW_ADMIN_MODE)
+        bPressed = false
+        if(packet.value[1].toInt() >= (1 + 2)) {
+            nMode = packet.value[2].toInt()
+            if (nMode == 1) viewModel.setDisplay(AutoDoor.DisplayView.VIEW_ADMIN_MODE)
+        }
     }
 
     Column (
@@ -82,13 +86,14 @@ internal fun AdminAuthView() {
         )
         Button(
             colors = ButtonDefaults.buttonColors(
-                containerColor = WbTheme.setButtonContainer,
-                contentColor = WbTheme.setButtonContent),
+                containerColor = WbTheme.getButtonContainer(bPressed),
+                contentColor = WbTheme.getButtonContent(bPressed)),
             enabled = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp),
             onClick = {
+                bPressed = true
                 val aPass = ByteArray(6).let { dest ->
                     sPassword.toByteArray().let { src ->
                         src.copyInto(dest, 0, 0, Integer.min(6, src.size))

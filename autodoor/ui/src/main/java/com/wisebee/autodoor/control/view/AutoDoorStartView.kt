@@ -99,7 +99,7 @@ internal fun AutoDoorStartView() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 50.dp),
-            onClick = { /*viewModel.setDisplay(AutoDoor.DisplayView.VIEW_ADMIN_AUTH)*/ },
+            onClick = { viewModel.setDisplay(AutoDoor.DisplayView.VIEW_ADMIN_AUTH) },
         ) { Text(text = "관리자 모드", fontSize = 20.sp) }
     }
 }

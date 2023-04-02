@@ -8,6 +8,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,7 @@ import no.nordicsemi.android.common.ui.scanner.view.DeviceConnectingView
 import timber.log.Timber
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,10 +37,10 @@ internal fun AutoDoorScreen(
 ) {
     val viewModel: AutoDoorViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
-    var befState by remember { mutableStateOf(AutoDoor.State.LOADING) }
-    var pwState by remember { mutableStateOf(AutoDoor.AuthorizedPw.PREPARE) }
+    var befState by rememberSaveable { mutableStateOf(AutoDoor.State.LOADING) }
+    var pwState by rememberSaveable { mutableStateOf(AutoDoor.AuthorizedPw.PREPARE) }
     val packet = viewModel.rxPacket.collectAsStateWithLifecycle()
-    var nMode by remember { mutableStateOf(0) }
+    var nMode by rememberSaveable { mutableStateOf(0) }
     val displayView by viewModel.displayView.collectAsStateWithLifecycle()
 
     Timber.tag("AutoDoorScreen").e("name=%s, pw=%s, state=%s", viewModel.deviceName, password, state.name)
@@ -60,15 +62,15 @@ internal fun AutoDoorScreen(
             AutoDoor.DisplayView.VIEW_UPDATE,
             AutoDoor.DisplayView.VIEW_OPER_INIT,
             AutoDoor.DisplayView.VIEW_TEST_MODE -> viewModel.setDisplay(AutoDoor.DisplayView.VIEW_ADMIN_MODE)
-            AutoDoor.DisplayView.VIEW_INIT_TIME,
+            AutoDoor.DisplayView.VIEW_INITIAL_TIME,
             AutoDoor.DisplayView.VIEW_SENSOR_ENABLE,
-            AutoDoor.DisplayView.VIEW_TOF,
+            AutoDoor.DisplayView.VIEW_TOF1,
+            AutoDoor.DisplayView.VIEW_TOF2,
             AutoDoor.DisplayView.VIEW_RADAR,
             AutoDoor.DisplayView.VIEW_MAIN_BLE,
             AutoDoor.DisplayView.VIEW_DCM,
             AutoDoor.DisplayView.VIEW_BLDC,
-            AutoDoor.DisplayView.VIEW_HLED,
-            AutoDoor.DisplayView.VIEW_TIME -> viewModel.setDisplay(AutoDoor.DisplayView.VIEW_ADMIN_PARAM)
+            AutoDoor.DisplayView.VIEW_HLED -> viewModel.setDisplay(AutoDoor.DisplayView.VIEW_ADMIN_PARAM)
         }
     }
 
@@ -114,9 +116,20 @@ internal fun AutoDoorScreen(
                             val aPw = ByteArray(6).let { dest ->
                                 password.toByteArray().let { src ->
                                     src.copyInto(dest, 0, 0, Integer.min(6, src.size))
-                                }}
+                                }
+                            }
                             val aVer = ByteBuffer.allocate(2).order(ByteOrder.BIG_ENDIAN).putShort(AutoDoorSpec.versionNum.toShort()).array()
-                            viewModel.sendCommand(DataToMCU.FID_APP_AUTH_USER_PW, byteArrayOf(*aPw, *aVer))
+                            val aTime = ByteArray(6).let { dest ->
+                                val current = LocalDateTime.now()
+                                dest[0] = (current.year % 100).toByte()
+                                dest[1] = current.monthValue.toByte()
+                                dest[2] = current.dayOfMonth.toByte()
+                                dest[3] = current.hour.toByte()
+                                dest[4] = current.minute.toByte()
+                                dest[5] = current.second.toByte()
+                                dest
+                            }
+                            viewModel.sendCommand(DataToMCU.FID_APP_AUTH_USER_PW, byteArrayOf(*aPw, *aVer, *aTime))
                             pwState = AutoDoor.AuthorizedPw.REQUESTED
                             AuthorizingView(modifier = Modifier.padding(16.dp), onClick = onNavigateUp)
                         }
@@ -128,7 +141,10 @@ internal fun AutoDoorScreen(
                             }
                             AuthorizingView(modifier = Modifier.padding(16.dp), onClick = onNavigateUp)
                         }
-                        AutoDoor.AuthorizedPw.SUCCESS -> AutoDoorMainView(onBackPressed = { onBackPressed() })
+                        AutoDoor.AuthorizedPw.SUCCESS -> {
+                            viewModel.sendCommand(DataToMCU.FID_APP_STATUS)
+                            AutoDoorMainView(onBackPressed = { onBackPressed() })
+                        }
                         AutoDoor.AuthorizedPw.FAIL -> AuthorizeFailView(modifier = Modifier.padding(16.dp), onClick = onNavigateUp)
                     }
                 }

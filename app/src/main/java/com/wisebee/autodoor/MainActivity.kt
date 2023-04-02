@@ -1,6 +1,8 @@
 package com.wisebee.autodoor
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
@@ -18,6 +20,7 @@ import no.nordicsemi.android.common.theme.NordicTheme
 @AndroidEntryPoint
 class MainActivity: NordicActivity() {
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,6 +39,7 @@ class MainActivity: NordicActivity() {
         setContent {
             NordicTheme {
                 NavigationView(ScannerDestination + AutoDoorDestination)
+                this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             }
         }
     }

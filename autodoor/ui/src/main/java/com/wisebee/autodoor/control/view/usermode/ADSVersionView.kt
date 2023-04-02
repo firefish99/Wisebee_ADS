@@ -1,14 +1,10 @@
-package com.wisebee.autodoor.control.view
+package com.wisebee.autodoor.control.view.usermode
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -18,25 +14,28 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wisebee.autodoor.ble.data.DataToMCU
 import com.wisebee.autodoor.control.viewmodel.AutoDoorViewModel
 import no.nordicsemi.android.common.theme.NordicTheme
+import timber.log.Timber
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
-import kotlin.math.roundToInt
 
 @Composable
-internal fun OperStatView() {
+internal fun ADSVersionView() {
     val viewModel: AutoDoorViewModel = hiltViewModel()
 
     val packet = viewModel.rxPacket.collectAsStateWithLifecycle()
-    val nPowerCount = remember { mutableStateListOf(0, 0, 0, 3300) }
-    if(packet.value[0] == DataToMCU.FID_APP_OPER_STAT && packet.value[1].toInt() >= (4*4 + 2)) {
-        for( i in 0..3)
-            nPowerCount[i] = ByteBuffer.wrap(packet.value, 2 + i * 4, 4).order(ByteOrder.BIG_ENDIAN).int
+    var sModelName by remember { mutableStateOf("") }
+    val nVersionNum = remember { mutableStateListOf(0, 0, 0) }
+    if(packet.value[0] == DataToMCU.FID_APP_VERSION && packet.value[1].toInt() >= (20 + 4*3 + 2)) {
+        sModelName = String(packet.value, 2, 20).substringBefore('\u0000')
+        for( i in 0..2)
+            nVersionNum[i] = ByteBuffer.wrap(packet.value, 2 + 20 + i * 4, 4).order(ByteOrder.BIG_ENDIAN).int
     }
-    //Timber.tag("OperStatView").e("${nPowerCount[0]}, ${nPowerCount[1]}, ${nPowerCount[2]}, ${nPowerCount[3]}")
+    Timber.tag("ADSVersionView").e("$sModelName, ${nVersionNum[0]}, ${nVersionNum[1]}, ${nVersionNum[2]}")
 
-    val nPercent = if (nPowerCount[3] < 1000) 0
-        else if(nPowerCount[3] > 3300) 100
-        else ((nPowerCount[3] - 1000f) * 100f / (3300f - 1000f)).roundToInt()
+    fun getVerString(value: Int) : String
+    {
+        return (value / 10000).toString() + "." + ((value / 100) % 100).toString() + "." + (value % 100).toString()
+    }
 
     Column (
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -45,22 +44,17 @@ internal fun OperStatView() {
             modifier = Modifier
                 .align(alignment = Alignment.CenterHorizontally)
                 .fillMaxWidth()
-                .padding(bottom = 10.dp),
+                .padding(bottom = (10.dp + 16.dp)),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "운행 조회", fontSize = 25.sp,
+                text = "Version 정보", fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
+                    //.align(alignment = Alignment.CenterHorizontally)
                     .wrapContentWidth()
-                    .padding(end = 10.dp)
+                    .padding(bottom = 10.dp)
             )
-            Box(
-                modifier = Modifier
-                    .clickable {
-                        viewModel.getStatus(DataToMCU.FID_APP_OPER_STAT)
-                    },
-            ) { RefreshButton() }
         }
 
         Column (
@@ -69,33 +63,32 @@ internal fun OperStatView() {
                 .wrapContentWidth()
         ) {
             Text(
-                text = "전원 인가 횟수 : ${String.format("%05d", nPowerCount[0])}", fontSize = 18.sp,
+                text = "모델명 : $sModelName", fontSize = 18.sp,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
                     .wrapContentWidth()
                     .padding(top = 20.dp, bottom = 20.dp)
             )
             Text(
-                text = "문 열림 횟수 : ${String.format("%05d", nPowerCount[1])}", fontSize = 18.sp,
+                text = "부트로더 버전 : ${getVerString(nVersionNum[0])}", fontSize = 18.sp,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
                     .wrapContentWidth()
                     .padding(bottom = 20.dp)
             )
             Text(
-                text = "문 충돌 횟수 : ${String.format("%05d", nPowerCount[2])}", fontSize = 18.sp,
+                text = "메인보드 버전 : ${getVerString(nVersionNum[1])}", fontSize = 18.sp,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
                     .wrapContentWidth()
                     .padding(bottom = 20.dp)
             )
             Text(
-                text = "실내버튼 배터리 : ${String.format("%d%%", nPercent)}", fontSize = 18.sp,
-                color = if (nPercent == 0) Color.Red else Color.Unspecified,
+                text = "시리얼플래쉬 버전 : ${getVerString(nVersionNum[2])}", fontSize = 18.sp,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
                     .wrapContentWidth()
-                    .padding(bottom = 20.dp)
+                    .padding(bottom = 0.dp)
             )
         }
     }
@@ -103,8 +96,8 @@ internal fun OperStatView() {
 
 @Preview
 @Composable
-private fun OperStatViewPreview() {
+private fun ADSVersionViewPreview() {
     NordicTheme {
-        OperStatView()
+        ADSVersionView()
     }
 }

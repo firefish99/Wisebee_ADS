@@ -54,7 +54,7 @@ private class AutoDoorManagerImpl(
     override suspend fun connect() {
         connect(device)
             .retry(5, 500)
-            .useAutoConnect(true)
+            .useAutoConnect(false)
             .timeout(5000)
             .suspend()
     }
@@ -91,18 +91,18 @@ private class AutoDoorManagerImpl(
         ).suspend()
     }
 
-    override suspend fun getStatus(fid: Byte) {
+    override suspend fun sendCommand(fid: Byte) {
         writeCharacteristic(
             toMCUCharacteristic,
-            DataToMCU.getStatus(fid),
+            DataToMCU.sendCommand(fid),
             BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
         ).suspend()
     }
 
-    override suspend fun getStatus(fid: Byte, flag: Byte) {
+    override suspend fun sendCommand(fid: Byte, flag: Byte) {
         writeCharacteristic(
             toMCUCharacteristic,
-            DataToMCU.getStatus(fid, flag),
+            DataToMCU.sendCommand(fid, flag),
             BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
         ).suspend()
     }
@@ -151,7 +151,7 @@ private class AutoDoorManagerImpl(
 
         writeCharacteristic(
             toMCUCharacteristic,
-            DataToMCU.getStatus(DataToMCU.FID_APP_STATUS),
+            DataToMCU.sendCommand(DataToMCU.FID_APP_STATUS),
             BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
         ).enqueue()
     }
