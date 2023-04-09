@@ -176,7 +176,8 @@ internal fun UpdateView() {
         Text(
             text = when(nResult) {
                 DataToMCU.SYS_CMD_SUCCESS -> {
-                    if(nCommand == DataToMCU.CMD_SET_DEFAULT.toInt())
+                    if(nCommand == DataToMCU.CMD_SET_DEFAULT.toInt()
+                        || nCommand == DataToMCU.BLE_SAVE_SUBCONFIG.toInt())
                         "명령이 정상적으로 완료되었습니다."
                     else
                         "명령이 정상적으로 완료되었습니다. MCU가 리부팅됩니다."

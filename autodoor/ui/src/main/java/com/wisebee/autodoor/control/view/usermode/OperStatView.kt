@@ -31,7 +31,7 @@ internal fun OperStatView() {
     if(packet.value[0] == DataToMCU.FID_APP_OPER_STAT && packet.value[1].toInt() >= (4*4 + 2)) {
         for( i in 0..3)
             nPowerCount[i] = ByteBuffer.wrap(packet.value, 2 + i * 4, 4).order(ByteOrder.BIG_ENDIAN).int
-        nPowerCount[3].and(0x7fff)
+        nPowerCount[3] = nPowerCount[3].and(0x7fff)
     }
     //Timber.tag("OperStatView").e("${nPowerCount[0]}, ${nPowerCount[1]}, ${nPowerCount[2]}, ${nPowerCount[3]}")
 
@@ -89,7 +89,7 @@ internal fun OperStatView() {
             )
             Text(
                 text = "실내버튼 배터리 : ${String.format("%d%%", nPercent)}", fontSize = 18.sp,
-                color = if (nPercent == 0) Color.Red else Color.Unspecified,
+                color = if (nPowerCount[3] < 1000) Color.Red else Color.Unspecified,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
                     .wrapContentWidth()

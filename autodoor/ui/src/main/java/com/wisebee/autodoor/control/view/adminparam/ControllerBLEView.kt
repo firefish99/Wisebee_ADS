@@ -40,7 +40,7 @@ internal fun ControllerBLEView() {
                     for (i in 0 until 6)
                         macAddress[i] = packet.value[3 + i]
                     battery = ByteBuffer.wrap(packet.value, 9, 2).order(ByteOrder.BIG_ENDIAN).short.toInt()
-                    battery.and(0x7fff)
+                    battery = battery.and(0x7fff)
                 }
                 nResult  = 0
             }
@@ -109,7 +109,7 @@ internal fun ControllerBLEView() {
 
             Text(
                 text = "실내버튼 배터리 : ${String.format("%d%%", nPercent)}", fontSize = 18.sp,
-                color = if (nPercent == 0) Color.Red else Color.Unspecified,
+                color = if (battery < 1000) Color.Red else Color.Unspecified,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
                     .wrapContentWidth(),
