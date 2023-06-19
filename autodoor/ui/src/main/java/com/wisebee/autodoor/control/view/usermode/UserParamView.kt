@@ -99,11 +99,11 @@ internal fun UserParamView() {
 
         ) {
             ParamFun(name="열림속도", index=0, valueRange=1000f..2800f)
-            ParamFun(name="닫힘속도", index=1, valueRange=1000f..2800f)
+            ParamFun(name="닫힘속도", index=1, valueRange=500f..2800f)
             ParamFun(name="열림 갭", index=2, valueRange=100f..1000f)
-            ParamFun(name="닫힘 갭", index=3, valueRange=50f..100f, unit=10)
+            ParamFun(name="닫힘 갭", index=3, valueRange=50f..200f, unit=10)
             ParamFun(name="저속 구간 시작", index=4, valueRange=500f..2000f)
-            ParamFun(name="저속 구간 속도", index=5, valueRange=500f..1500f)
+            ParamFun(name="저속 구간 속도", index=5, valueRange=300f..1500f)
             ParamFun(name="닫힘 대기 시간", index=6, valueRange=1000f..10000f)
 
             Button(

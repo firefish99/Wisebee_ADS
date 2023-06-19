@@ -123,7 +123,7 @@ internal fun ControllerBLEView() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "보드 리셋 : ",
+                    text = "BLE 모듈 리셋 : ",
                     fontSize = 18.sp,
                     modifier = Modifier
                         .wrapContentWidth()

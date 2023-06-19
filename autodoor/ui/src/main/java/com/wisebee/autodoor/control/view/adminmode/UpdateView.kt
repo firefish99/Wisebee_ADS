@@ -25,7 +25,7 @@ internal fun UpdateView() {
     var nMode by remember { mutableStateOf(0) }
     var nCommand by remember { mutableStateOf(0) }
     var nResult by remember { mutableStateOf(0) }
-    val bPressed = remember { mutableStateListOf( false, false, false ) }
+    val bPressed = remember { mutableStateListOf( false, false, false, false ) }
     if(packet.value[0] == DataToMCU.FID_APP_SYS_COMMAND) {
         packet.value[0] = DataToMCU.FID_APP_NONE
         bPressed.fill(false)
@@ -170,6 +170,29 @@ internal fun UpdateView() {
             ) {
                 bPressed[2] = true
                 viewModel.sendCommand(DataToMCU.FID_APP_SYS_COMMAND, DataToMCU.CMD_SET_DEFAULT)
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = (20.dp + 16.dp), start = 20.dp, end = 20.dp),
+        ) {
+            Text(
+                text = "컨트롤러 리부팅", fontSize = 22.sp,
+                modifier = Modifier
+                    .align(alignment = Alignment.CenterVertically)
+                    .weight(1f)
+                    .padding(end = 10.dp)
+            )
+            StartButton(
+                modifier = Modifier
+                    .width(70.dp),
+                pressed = bPressed[3],
+                button = "시작"
+            ) {
+                bPressed[3] = true
+                viewModel.sendCommand(DataToMCU.FID_APP_SYS_COMMAND, DataToMCU.BLE_SYS_RESET)
             }
         }
 

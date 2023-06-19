@@ -78,8 +78,8 @@ internal fun HLEDView() {
                 .padding(top = 20.dp, bottom = 0.dp, start = 10.dp, end = 0.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            SimpleParamInput(name="상부LED 시작시간", value=nParamValue[0], valueRange=1000f..5000f, unit=100) {nParamValue[0]=it.roundToInt()}
-            SimpleParamInput(name="상부LED 지속시간", value=nParamValue[1], valueRange=1000f..5000f, unit=100) {nParamValue[1]=it.roundToInt()}
+            SimpleParamInput(name="상부LED 시작시간", value=nParamValue[0], valueRange=1000f..10000f, unit=100) {nParamValue[0]=it.roundToInt()}
+            SimpleParamInput(name="상부LED 지속시간", value=nParamValue[1], valueRange=1000f..10000f, unit=100) {nParamValue[1]=it.roundToInt()}
         }
         Button(
             colors = ButtonDefaults.buttonColors(

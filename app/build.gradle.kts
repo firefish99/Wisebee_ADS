@@ -9,8 +9,8 @@ android {
     namespace = "com.wisebee.autodoor"
     defaultConfig {
         applicationId = "com.wisebee.autodoor"
-        versionCode=4
-        versionName="1.0.3"
+        versionCode=8
+        versionName="1.0.7"
         resourceConfigurations.add("en")
     }
 }

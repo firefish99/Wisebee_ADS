@@ -90,7 +90,7 @@ internal fun TOFParamView(tof_id : Int = 0) {
             SimpleParamInput(name="검지영역 RX", value=nParamValue[4], valueRange=0f..15f, unit=1) {nParamValue[4]=it.roundToInt()}
             SimpleParamInput(name="검지영역 RY", value=nParamValue[5], valueRange=0f..15f, unit=1) {nParamValue[5]=it.roundToInt()}
             SimpleParamInput(name="인식 최대 거리", value=nParamValue[6], valueRange=1000f..4000f, unit=100) {nParamValue[6]=it.roundToInt()}
-            SimpleParamInput(name="인식 최소 거리", value=nParamValue[7], valueRange=50f..100f, unit=10) {nParamValue[7]=it.roundToInt()}
+            SimpleParamInput(name="인식 최소 거리", value=nParamValue[7], valueRange=50f..300f, unit=10) {nParamValue[7]=it.roundToInt()}
             SimpleParamInput(name="인식 유효 시간", value=nParamValue[8], valueRange=100f..1000f, unit=100) {nParamValue[8]=it.roundToInt()}
             SimpleParamDisplay(name="환경 측정 거리 값", value=nParamValue[9].toString())
             Spacer(modifier=Modifier.padding(horizontal=5.dp))

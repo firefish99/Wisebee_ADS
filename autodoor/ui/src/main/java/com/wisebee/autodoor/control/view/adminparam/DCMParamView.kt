@@ -30,7 +30,7 @@ internal fun DCMParamView() {
     val viewModel: AutoDoorViewModel = hiltViewModel()
 
     val packet = viewModel.rxPacket.collectAsStateWithLifecycle()
-    val nParamCount = 24
+    val nParamCount = 26
     val nParamValue = remember { mutableStateListOf( *(Array(nParamCount) { 0 }) ) }
     var bPressed by remember { mutableStateOf( false ) }
     if(packet.value[0] == DataToMCU.FID_APP_RW_BLOCK) {
@@ -93,7 +93,9 @@ internal fun DCMParamView() {
             SimpleParamInput(name="닫힘 감속도", value=nParamValue[10], valueRange=100f..500f, unit=100) {nParamValue[10]=it.roundToInt()}
             SimpleParamInput(name="닫힘 감속 단위시간", value=nParamValue[11], valueRange=100f..1000f,unit=100) {nParamValue[11]=it.roundToInt()}
             SimpleParamInput(name="닫힘 갭", value=nParamValue[12], valueRange=50f..100f,unit=10) {nParamValue[12]=it.roundToInt()}
-            SimpleParamInput(name="닫힘 파워", value=nParamValue[13], valueRange=5f..30f,unit=1) {nParamValue[13]=it.roundToInt()}
+            SimpleParamInput(name="닫힘 파워", value=nParamValue[13], valueRange=0f..30f,unit=1) {nParamValue[13]=it.roundToInt()}
+            SimpleParamInput(name="최종 닫힘 갭", value=nParamValue[24], valueRange=0f..100f,unit=10) {nParamValue[24]=it.roundToInt()}
+            SimpleParamInput(name="최종 닫힘 파워", value=nParamValue[25], valueRange=0f..30f,unit=1) {nParamValue[25]=it.roundToInt()}
             SimpleParamInput(name="저속 속도", value=nParamValue[14], valueRange=500f..1500f,unit=100) {nParamValue[14]=it.roundToInt()}
             SimpleParamInput(name="저속 시작 구간", value=nParamValue[15], valueRange=500f..2000f,unit=100) {nParamValue[15]=it.roundToInt()}
             SimpleParamInput(name="충격 레벨", value=nParamValue[16], valueRange=500f..3000f,unit=100) {nParamValue[16]=it.roundToInt()}

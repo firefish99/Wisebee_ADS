@@ -90,6 +90,7 @@ class DataToMCU private constructor() {
         const val BLE_LOAD_SUBCONFIG : Byte = 0x06
         const val SYS_CMD_SUCCESS : Int = 1
         const val SYS_CMD_NO_BIN : Int = 2
+        const val BLE_SYS_RESET : Byte = 0x07
 
         //FID_APP_BLE_COMMAND
         const val CMD_GET_BLE_STATUS : Byte = 0x00
