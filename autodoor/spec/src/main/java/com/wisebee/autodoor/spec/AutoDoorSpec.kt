@@ -12,8 +12,8 @@ class AutoDoorSpec {
 
         var bleDevice : BluetoothDevice? = null
         var bleName : String? = null
-        var versionName = "1.0.0"
-        var versionNum = 0
+        var versionName = "1.1.1"
+        var versionNum = 10
     }
 
 }

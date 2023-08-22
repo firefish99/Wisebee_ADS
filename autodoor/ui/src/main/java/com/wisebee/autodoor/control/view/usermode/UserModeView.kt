@@ -15,6 +15,7 @@ import com.wisebee.autodoor.ble.data.DataToMCU
 import com.wisebee.autodoor.control.viewmodel.AutoDoorViewModel
 import com.wisebee.autodoor.spec.AutoDoor
 import no.nordicsemi.android.common.theme.NordicTheme
+import kotlin.experimental.or
 
 @Composable
 internal fun UserModeView() {
@@ -65,10 +66,49 @@ internal fun UserModeView() {
                 .fillMaxWidth()
                 .padding(horizontal = 50.dp),
             onClick = {
+                viewModel.sendCommand(DataToMCU.FID_APP_BLE_COMMAND, DataToMCU.CMD_GET_BLE_STATUS)
+                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_USER_MAIN_BLE)
+            },
+        ) { Text(text = "컨트롤보드 BLE 설정", fontSize = 20.sp) }
+        Button(
+            enabled = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 50.dp),
+            onClick = {
                 viewModel.sendCommand(DataToMCU.FID_APP_RENAME_DEVICE, DataToMCU.CMD_GET_NAME)
                 viewModel.setDisplay(AutoDoor.DisplayView.VIEW_RENAME_DEVICE)
             },
         ) { Text(text = "장치이름 변경", fontSize = 20.sp) }
+        Button(
+            enabled = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 50.dp),
+            onClick = {
+                viewModel.sendCommand(DataToMCU.FID_APP_SENSOR_CALIB, DataToMCU.CMD_GET_CALIB)
+                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_USER_CALIBRATION)
+            },
+        ) { Text(text = "센서 캘리브레이션", fontSize = 20.sp) }
+        Button(
+            enabled = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 50.dp),
+            onClick = {
+                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_USER_REBOOT)
+            },
+        ) { Text(text = "컨트롤러 리부팅", fontSize = 20.sp) }
+        Button(
+            enabled = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 50.dp),
+            onClick = {
+                viewModel.sendCommand(DataToMCU.FID_APP_RW_BLOCK, DataToMCU.BLE_RW_HLED_CMD.or(DataToMCU.BLE_RW_READ))
+                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_USER_HLED)
+            },
+        ) { Text(text = "상부LED 설정", fontSize = 20.sp) }
         Button(
             enabled = true,
             modifier = Modifier

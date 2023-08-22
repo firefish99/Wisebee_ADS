@@ -3,7 +3,6 @@ package com.wisebee.autodoor.ble.data
 import android.bluetooth.BluetoothDevice
 import no.nordicsemi.android.ble.callback.profile.ProfileReadResponse
 import no.nordicsemi.android.ble.data.Data
-import timber.log.Timber
 
 abstract class ToMCUCallback: ProfileReadResponse() {
 
@@ -19,7 +18,7 @@ abstract class ToMCUCallback: ProfileReadResponse() {
     }
 
     override fun onDataReceived(device: BluetoothDevice, data: Data) {
-        Timber.tag("LedCallback").e("%d:%s", data.size(), byteArrayToHexString(data.value));
+        //Timber.tag("LedCallback").e("%d:%s", data.size(), byteArrayToHexString(data.value));
         /*
         if (data.size() == 1) {
             val ledState = data.getIntValue(Data.FORMAT_UINT8, 0) == 0x01

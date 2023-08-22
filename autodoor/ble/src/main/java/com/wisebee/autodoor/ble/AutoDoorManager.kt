@@ -17,7 +17,6 @@ import no.nordicsemi.android.ble.ktx.getCharacteristic
 import no.nordicsemi.android.ble.ktx.state.ConnectionState
 import no.nordicsemi.android.ble.ktx.stateAsFlow
 import no.nordicsemi.android.ble.ktx.suspend
-import timber.log.Timber
 
 class AutoDoorManager(
     context: Context,
@@ -108,7 +107,7 @@ private class AutoDoorManagerImpl(
     }
 
     override fun log(priority: Int, message: String) {
-        Timber.log(priority, message)
+        //Timber.log(priority, message)
     }
 
     override fun getMinLogPriority(): Int {

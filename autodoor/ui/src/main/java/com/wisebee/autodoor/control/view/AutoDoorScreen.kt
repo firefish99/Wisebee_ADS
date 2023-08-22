@@ -24,7 +24,6 @@ import com.wisebee.autodoor.spec.AutoDoorSpec
 import no.nordicsemi.android.common.permission.RequireBluetooth
 import no.nordicsemi.android.common.theme.view.NordicAppBar
 import no.nordicsemi.android.common.ui.scanner.view.DeviceConnectingView
-import timber.log.Timber
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.time.LocalDateTime
@@ -43,7 +42,7 @@ internal fun AutoDoorScreen(
     var nMode by rememberSaveable { mutableStateOf(0) }
     val displayView by viewModel.displayView.collectAsStateWithLifecycle()
 
-    Timber.tag("AutoDoorScreen").e("name=%s, pw=%s, state=%s", viewModel.deviceName, password, state.name)
+    //Timber.tag("AutoDoorScreen").e("name=%s, pw=%s, state=%s", viewModel.deviceName, password, state.name)
 
     fun onBackPressed() {
         when(displayView) {
@@ -56,6 +55,10 @@ internal fun AutoDoorScreen(
             AutoDoor.DisplayView.VIEW_CHANGE_MODE,
             AutoDoor.DisplayView.VIEW_RENAME_DEVICE,
             AutoDoor.DisplayView.VIEW_USER_PARAM,
+            AutoDoor.DisplayView.VIEW_USER_MAIN_BLE,
+            AutoDoor.DisplayView.VIEW_USER_CALIBRATION,
+            AutoDoor.DisplayView.VIEW_USER_REBOOT,
+            AutoDoor.DisplayView.VIEW_USER_HLED,
             AutoDoor.DisplayView.VIEW_CHANGE_PW -> viewModel.setDisplay(AutoDoor.DisplayView.VIEW_USER_MODE)
             AutoDoor.DisplayView.VIEW_ADMIN_PARAM,
             AutoDoor.DisplayView.VIEW_CALIBRATION,
@@ -156,7 +159,7 @@ internal fun AutoDoorScreen(
                             onNavigateUp()
                     }
                     else {
-                        Timber.tag("AutoDoorScreen").e("befState=%s", befState.name)
+                        //Timber.tag("AutoDoorScreen").e("befState=%s", befState.name)
                         DeviceConnectingView(
                             modifier = Modifier.padding(16.dp),
                         ) { padding ->

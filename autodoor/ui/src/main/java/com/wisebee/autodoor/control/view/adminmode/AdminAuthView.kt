@@ -33,7 +33,7 @@ internal fun AdminAuthView() {
     val (focusRequester) = FocusRequester.createRefs()
 
     val packet = viewModel.rxPacket.collectAsStateWithLifecycle()
-    var nMode by remember { mutableStateOf(1) }
+    var nMode by remember { mutableStateOf(4) }
     var sPassword by remember { mutableStateOf("") }
     var bPressed by remember { mutableStateOf( false ) }
     if(packet.value[0] == DataToMCU.FID_APP_AUTH_ADMIN_PW) {
@@ -73,7 +73,7 @@ internal fun AdminAuthView() {
 
         Text(
             text = when(nMode) {
-                1 -> "장치이름이 변경되었습니다."
+                1 -> "관리자 모드로 진입합니다."
                 2 -> "비밀번호가 잘못 입력되었습니다."
                 3 -> "데이터 형식이 잘못되었습니다."
                 else -> ""

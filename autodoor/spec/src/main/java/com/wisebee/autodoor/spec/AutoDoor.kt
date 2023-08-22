@@ -42,6 +42,10 @@ interface AutoDoor {
         VIEW_DCM,
         VIEW_BLDC,
         VIEW_HLED,
+        VIEW_USER_MAIN_BLE,
+        VIEW_USER_CALIBRATION,
+        VIEW_USER_REBOOT,
+        VIEW_USER_HLED,
     }
 
     suspend fun connect()

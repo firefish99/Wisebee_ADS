@@ -41,7 +41,7 @@ internal fun AutoDoorMainView(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
-                text = "LUX HOME", fontSize = 40.sp,
+                text = "LUXHOME", fontSize = 40.sp,
                 fontWeight = FontWeight.ExtraBold,
                 modifier = Modifier
                     .align(alignment = Alignment.CenterHorizontally)
@@ -74,6 +74,10 @@ internal fun AutoDoorMainView(
                 AutoDoor.DisplayView.VIEW_DCM -> DCMParamView()
                 AutoDoor.DisplayView.VIEW_BLDC -> BLDCParamView()
                 AutoDoor.DisplayView.VIEW_HLED -> HLEDView()
+                AutoDoor.DisplayView.VIEW_USER_MAIN_BLE -> UserBLEView()
+                AutoDoor.DisplayView.VIEW_USER_CALIBRATION -> CalibrationView()
+                AutoDoor.DisplayView.VIEW_USER_REBOOT -> UserRebootView()
+                AutoDoor.DisplayView.VIEW_USER_HLED -> HLEDView()
                 else -> {}
             }
         }

@@ -49,7 +49,7 @@ internal fun TOFParamView(tof_id : Int = 0) {
             }
         }
     }
-    Timber.tag("TOFParamView").e("${nParamValue[0]}, ${nParamValue[1]}, ${nParamValue[2]}")
+    //Timber.tag("TOFParamView").e("${nParamValue[0]}, ${nParamValue[1]}, ${nParamValue[2]}")
 
     Column (
         //modifier = Modifier

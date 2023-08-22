@@ -14,7 +14,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wisebee.autodoor.ble.data.DataToMCU
 import com.wisebee.autodoor.control.viewmodel.AutoDoorViewModel
 import no.nordicsemi.android.common.theme.NordicTheme
-import timber.log.Timber
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -30,7 +29,7 @@ internal fun ADSVersionView() {
         for( i in 0..2)
             nVersionNum[i] = ByteBuffer.wrap(packet.value, 2 + 20 + i * 4, 4).order(ByteOrder.BIG_ENDIAN).int
     }
-    Timber.tag("ADSVersionView").e("$sModelName, ${nVersionNum[0]}, ${nVersionNum[1]}, ${nVersionNum[2]}")
+    //Timber.tag("ADSVersionView").e("$sModelName, ${nVersionNum[0]}, ${nVersionNum[1]}, ${nVersionNum[2]}")
 
     fun getVerString(value: Int) : String
     {
