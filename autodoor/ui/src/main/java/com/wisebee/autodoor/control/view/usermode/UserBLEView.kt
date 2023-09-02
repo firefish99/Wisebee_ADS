@@ -78,46 +78,39 @@ internal fun UserBLEView() {
             modifier = Modifier
                 .align(alignment = Alignment.CenterHorizontally)
                 .padding(top = 20.dp, bottom = 0.dp, start = 10.dp, end = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            //verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Row(
+            Text(
+                text = "MAC : " + String.format("%02X:%02X:%02X:%02X:%02X:%02X",
+                    macAddress[0], macAddress[1], macAddress[2], macAddress[3], macAddress[4], macAddress[5]),
+                fontSize = 18.sp,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .wrapContentWidth()
+            )
+            StartButton(
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .defaultMinSize(150.dp),
+                pressed = bPressed[0],
+                button = "초기화"
             ) {
-                Text(
-                    text = "MAC : " + String.format("%02X:%02X:%02X:%02X:%02X:%02X",
-                        macAddress[0], macAddress[1], macAddress[2], macAddress[3], macAddress[4], macAddress[5]),
-                    fontSize = 18.sp,
-                    modifier = Modifier
-                        .wrapContentWidth()
-                )
-                StartButton(
-                    modifier = Modifier
-                        .width(70.dp),
-                    pressed = bPressed[0],
-                    button = "초기화"
-                ) {
-                    bPressed[0] = true
-                    viewModel.sendCommand(DataToMCU.FID_APP_BLE_COMMAND, DataToMCU.CMD_CLEAR_BUTTON_MAC)
-                }
+                bPressed[0] = true
+                viewModel.sendCommand(DataToMCU.FID_APP_BLE_COMMAND, DataToMCU.CMD_CLEAR_BUTTON_MAC)
             }
 
-            Text(
-                text = when(nResult) {
-                    1 -> "BLE Button MAC 주소가 초기화되었습니다."
-                    else -> ""
-                },
-                fontSize = 16.sp,
-                modifier = Modifier
-                    .align(alignment = Alignment.CenterHorizontally)
-                    .wrapContentWidth()
-                    .padding(top = 10.dp, start = 20.dp, end = 20.dp)
-            )
-
         }
+        Text(
+            text = when(nResult) {
+                1 -> "BLE Button MAC 주소가 초기화되었습니다."
+                else -> ""
+            },
+            fontSize = 16.sp,
+            modifier = Modifier
+                .align(alignment = Alignment.CenterHorizontally)
+                .wrapContentWidth()
+                .padding(top = 10.dp, start = 20.dp, end = 20.dp)
+        )
     }
 }
 

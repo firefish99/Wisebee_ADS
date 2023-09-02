@@ -45,6 +45,7 @@ internal fun OperInitView() {
     //Timber.tag("OperStatView").e("${nPowerCount[0]}, ${nPowerCount[1]}, ${nPowerCount[2]}, ${nPowerCount[3]}")
 
     Column (
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Row(
@@ -99,8 +100,8 @@ internal fun OperInitView() {
                 contentColor = WbTheme.getButtonContent(bPressed)),
             enabled = true,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 100.dp),
+                .defaultMinSize(200.dp)
+                .padding(horizontal = 10.dp),
             onClick = {
                 bPressed = true
                 viewModel.sendCommand(DataToMCU.FID_APP_SYS_COMMAND, DataToMCU.CMD_INIT_OPER_STAT)

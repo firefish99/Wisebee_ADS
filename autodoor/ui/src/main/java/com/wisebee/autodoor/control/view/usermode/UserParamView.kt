@@ -109,33 +109,34 @@ internal fun UserParamView() {
 
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = WbTheme.getButtonContainer(bPressed[7]),
-                    contentColor = WbTheme.getButtonContent(bPressed[7])),
-                enabled = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .padding(top = 20.dp),
-                onClick = {
-                    bPressed[7] = true
-                    viewModel.sendCommand(DataToMCU.FID_APP_SYS_COMMAND, DataToMCU.BLE_LOAD_SUBCONFIG)
-                },
-            ) { Text(text = "사용자 설정 불러오기", fontSize = 16.sp) }
-
-            Button(
-                colors = ButtonDefaults.buttonColors(
                     containerColor = WbTheme.getButtonContainer(bPressed[8]),
                     contentColor = WbTheme.getButtonContent(bPressed[8])),
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
-                    .padding(top = 10.dp),
+                    .padding(top = 20.dp),
                 onClick = {
                     bPressed[8] = true
                     viewModel.sendCommand(DataToMCU.FID_APP_SYS_COMMAND, DataToMCU.BLE_SAVE_SUBCONFIG)
                 },
             ) { Text(text = "사용자 설정 저장", fontSize = 16.sp) }
+
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = WbTheme.getButtonContainer(bPressed[7]),
+                    contentColor = WbTheme.getButtonContent(bPressed[7])),
+                enabled = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .padding(top = 10.dp),
+                onClick = {
+                    bPressed[7] = true
+                    viewModel.sendCommand(DataToMCU.FID_APP_SYS_COMMAND, DataToMCU.BLE_LOAD_SUBCONFIG)
+                },
+            ) { Text(text = "사용자 설정 불러오기", fontSize = 16.sp) }
+
         }
     }
 }

@@ -55,7 +55,8 @@ internal fun ControllerBLEView() {
     //Timber.tag("ControllerBLEView").e("${nParamValue[0]}, ${nParamValue[1]}, ${nParamValue[2]}")
 
     Column (
-        verticalArrangement = Arrangement.spacedBy(0.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        //verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
         Row(
             modifier = Modifier
@@ -80,52 +81,30 @@ internal fun ControllerBLEView() {
             modifier = Modifier
                 .align(alignment = Alignment.CenterHorizontally)
                 .padding(top = 20.dp, bottom = 0.dp, start = 10.dp, end = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            //verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "MAC : " + String.format("%02X:%02X:%02X:%02X:%02X:%02X",
-                        macAddress[0], macAddress[1], macAddress[2], macAddress[3], macAddress[4], macAddress[5]),
-                    fontSize = 18.sp,
-                    modifier = Modifier
-                        .wrapContentWidth()
-                )
-                StartButton(
-                    modifier = Modifier
-                        .width(70.dp),
-                    pressed = bPressed[0],
-                    button = "초기화"
-                ) {
-                    bPressed[0] = true
-                    viewModel.sendCommand(DataToMCU.FID_APP_BLE_COMMAND, DataToMCU.CMD_CLEAR_BUTTON_MAC)
-                }
-            }
-
             Text(
                 text = "실내버튼 배터리 : ${String.format("%d%%", nPercent)}", fontSize = 18.sp,
                 color = if (battery < 1000) Color.Red else Color.Unspecified,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
+                    .padding(bottom = 16.dp)
                     .wrapContentWidth(),
             )
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .align(alignment = Alignment.Start)
+                    .padding(bottom = 16.dp)
                     .wrapContentHeight(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = "BLE 모듈 리셋 : ",
                     fontSize = 18.sp,
                     modifier = Modifier
+                        .padding(end = 20.dp)
                         .wrapContentWidth()
                 )
                 StartButton(
@@ -138,21 +117,52 @@ internal fun ControllerBLEView() {
                     viewModel.sendCommand(DataToMCU.FID_APP_BLE_COMMAND, DataToMCU.CMD_RESET_BLE_MODULE)
                 }
             }
-
-            Text(
-                text = when(nResult) {
-                    1 -> "BLE Button MAC 주소가 초기화되었습니다."
-                    2 -> "BLE 보드가 리셋됩니다. 재 연결하시기 바랍니다."
-                    else -> ""
-                },
-                fontSize = 16.sp,
+            Row(
                 modifier = Modifier
-                    .align(alignment = Alignment.CenterHorizontally)
-                    .wrapContentWidth()
-                    .padding(top = 10.dp, start = 20.dp, end = 20.dp)
-            )
-
+                    .align(alignment = Alignment.Start)
+                    .wrapContentHeight(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "MAC : " + String.format("%02X:%02X:%02X:%02X:%02X:%02X",
+                        macAddress[0], macAddress[1], macAddress[2], macAddress[3], macAddress[4], macAddress[5]),
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .wrapContentWidth()
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .wrapContentHeight(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                StartButton(
+                    modifier = Modifier
+                        .defaultMinSize(150.dp),
+                    pressed = bPressed[0],
+                    button = "MAC 초기화"
+                ) {
+                    bPressed[0] = true
+                    viewModel.sendCommand(
+                        DataToMCU.FID_APP_BLE_COMMAND,
+                        DataToMCU.CMD_CLEAR_BUTTON_MAC
+                    )
+                }
+            }
         }
+        Text(
+            text = when(nResult) {
+                1 -> "BLE Button MAC 주소가 초기화되었습니다."
+                2 -> "BLE 보드가 리셋됩니다. 재 연결하시기 바랍니다."
+                else -> ""
+            },
+            fontSize = 16.sp,
+            modifier = Modifier
+                .align(alignment = Alignment.CenterHorizontally)
+                .wrapContentWidth()
+                .padding(top = 10.dp, start = 20.dp, end = 20.dp)
+        )
     }
 }
 

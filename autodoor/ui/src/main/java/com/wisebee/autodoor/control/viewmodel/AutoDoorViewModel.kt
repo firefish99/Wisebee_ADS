@@ -3,6 +3,7 @@ package com.wisebee.autodoor.control.viewmodel
 import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.content.Context
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.wisebee.autodoor.ble.data.DataToMCU
@@ -90,5 +91,21 @@ class AutoDoorViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         repository.release()
+    }
+}
+
+class AutoDoorPreView() {
+    //val viewModel = AutoDoorPreView()
+    //val packet = viewModel.rxPacket
+
+    val rxPacket = mutableStateOf(ByteArray(0x2))
+
+    fun sendCommand(fid: Byte, data: ByteArray) {
+    }
+
+    fun sendCommand(fid: Byte) {
+    }
+
+    fun sendCommand(fid: Byte, flag: Byte) {
     }
 }

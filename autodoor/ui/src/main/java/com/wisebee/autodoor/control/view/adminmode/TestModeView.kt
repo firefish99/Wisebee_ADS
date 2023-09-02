@@ -71,6 +71,7 @@ internal fun TestModeView() {
     //Timber.tag("ModeChangeView").e("$nMode")
 
     Column (
+        horizontalAlignment = Alignment.CenterHorizontally
         //verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Row(
@@ -92,127 +93,127 @@ internal fun TestModeView() {
                 viewModel.sendCommand(DataToMCU.FID_APP_TEST_MODE, DataToMCU.CMD_GET_TEST_MODE)
             }
         }
-        Row (
+        Column (
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp, start = 20.dp, end = 20.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .wrapContentWidth()
+                .padding(bottom = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column (
-                modifier = Modifier.padding(end = 30.dp),
+            Row(
+                modifier = Modifier.padding(bottom = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.padding(bottom = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Text(
+                    text = "동작 횟수 : ", fontSize = 16.sp,
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .padding(end = 10.dp)
+                )
+                BasicTextField(
+                    value = sOperMax,
+                    onValueChange = { if (it.isEmpty() || it.toInt() in 1..300000) sOperMax = it },
+                    textStyle = TextStyle(fontSize = 16.sp, color = Color.Black, textAlign = TextAlign.End),
+                    modifier = Modifier
+                        .height(30.dp).width(80.dp)
+                        .focusRequester(focusRequester)
+                        .onKeyEvent {
+                            if (it.key == Key.Enter)
+                                focusRequester.requestFocus()
+                            false
+                        },
+
+                    interactionSource = interactionSource,
+                    enabled = true,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    keyboardActions = KeyboardActions(
+                        onDone = { focusRequester.requestFocus() }
+                    ),
                 ) {
-                    Text(
-                        text = "동작 횟수 : ", fontSize = 16.sp,
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .padding(end = 10.dp)
-                    )
-                    BasicTextField(
+                    TextFieldDefaults.TextFieldDecorationBox(
                         value = sOperMax,
-                        onValueChange = { if (it.isEmpty() || it.toInt() in 1..300000) sOperMax = it },
-                        textStyle = TextStyle(fontSize = 16.sp, color = Color.Black, textAlign = TextAlign.End),
-                        modifier = Modifier
-                            .height(30.dp).width(80.dp)
-                            .focusRequester(focusRequester)
-                            .onKeyEvent {
-                                if (it.key == Key.Enter)
-                                    focusRequester.requestFocus()
-                                false
-                            },
-
-                        interactionSource = interactionSource,
-                        enabled = true,
+                        innerTextField = it,
                         singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                        keyboardActions = KeyboardActions(
-                            onDone = { focusRequester.requestFocus() }
-                        ),
-                    ) {
-                        TextFieldDefaults.TextFieldDecorationBox(
-                            value = sOperMax,
-                            innerTextField = it,
-                            singleLine = true,
-                            enabled = true,
-                            visualTransformation = VisualTransformation.None,
-                            interactionSource = interactionSource,
-                            contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
-                                top = 5.dp, bottom = 5.dp, start = 0.dp, end = 5.dp
-                            )
+                        enabled = true,
+                        visualTransformation = VisualTransformation.None,
+                        interactionSource = interactionSource,
+                        contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
+                            top = 5.dp, bottom = 5.dp, start = 0.dp, end = 5.dp
                         )
-                    }
-                    Text(
-                        text = "회", fontSize = 16.sp,
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .padding(start = 10.dp, end = 10.dp)
                     )
                 }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "동작 간격 : ", fontSize = 16.sp,
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .padding(end = 10.dp)
-                    )
-                    BasicTextField(
-                        value = sOperGap,
-                        onValueChange = { if (it.isEmpty() || it.toInt() in 1..180) sOperGap = it },
-                        textStyle = TextStyle(fontSize = 16.sp, color = Color.Black, textAlign = TextAlign.End),
-                        modifier = Modifier
-                            .height(30.dp).width(80.dp)
-                            .focusRequester(focusRequester)
-                            .onKeyEvent {
-                                if (it.key == Key.Enter)
-                                    focusRequester.requestFocus()
-                                false
-                            },
-
-                        interactionSource = interactionSource,
-                        enabled = true,
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                        keyboardActions = KeyboardActions(
-                            onDone = { focusRequester.requestFocus() }
-                        ),
-                    ) {
-                        TextFieldDefaults.TextFieldDecorationBox(
-                            value = sOperGap,
-                            innerTextField = it,
-                            singleLine = true,
-                            enabled = true,
-                            visualTransformation = VisualTransformation.None,
-                            interactionSource = interactionSource,
-                            contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
-                                top = 5.dp, bottom = 5.dp, start = 0.dp, end = 5.dp
-                            )
-                        )
-                    }
-                    Text(
-                        text = "초", fontSize = 16.sp,
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .padding(start = 10.dp, end = 10.dp)
-                    )
-                }
+                Text(
+                    text = "회", fontSize = 16.sp,
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .padding(start = 10.dp, end = 10.dp)
+                )
             }
-            Button(
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = WbTheme.getButtonContainer(bPressed[0]),
-                    contentColor = WbTheme.getButtonContent(bPressed[0])),
-                enabled = true,
-                modifier = Modifier
-                    .width(120.dp)
-                    .height(50.dp),
-                onClick = {
-                    if(sOperMax.isNotEmpty() && sOperGap.isNotEmpty()) {
-                        bPressed[0] = true
+            Row(
+                modifier = Modifier.padding(bottom = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "동작 간격 : ", fontSize = 16.sp,
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .padding(end = 10.dp)
+                )
+                BasicTextField(
+                    value = sOperGap,
+                    onValueChange = { if (it.isEmpty() || it.toInt() in 1..180) sOperGap = it },
+                    textStyle = TextStyle(fontSize = 16.sp, color = Color.Black, textAlign = TextAlign.End),
+                    modifier = Modifier
+                        .height(30.dp).width(80.dp)
+                        .focusRequester(focusRequester)
+                        .onKeyEvent {
+                            if (it.key == Key.Enter)
+                                focusRequester.requestFocus()
+                            false
+                        },
+
+                    interactionSource = interactionSource,
+                    enabled = true,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    keyboardActions = KeyboardActions(
+                        onDone = { focusRequester.requestFocus() }
+                    ),
+                ) {
+                    TextFieldDefaults.TextFieldDecorationBox(
+                        value = sOperGap,
+                        innerTextField = it,
+                        singleLine = true,
+                        enabled = true,
+                        visualTransformation = VisualTransformation.None,
+                        interactionSource = interactionSource,
+                        contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
+                            top = 5.dp, bottom = 5.dp, start = 0.dp, end = 5.dp
+                        )
+                    )
+                }
+                Text(
+                    text = "초", fontSize = 16.sp,
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .padding(start = 10.dp, end = 10.dp)
+                )
+            }
+            Row(
+                modifier = Modifier.padding(bottom = 10.dp),
+            ) {
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = WbTheme.getButtonContainer(bPressed[0]),
+                        contentColor = WbTheme.getButtonContent(bPressed[0])
+                    ),
+                    enabled = true,
+                    modifier = Modifier
+                        .defaultMinSize(150.dp)
+                        .height(40.dp),
+                    onClick = {
+                        if (sOperMax.isNotEmpty() && sOperGap.isNotEmpty()) {
+                            bPressed[0] = true
                         viewModel.sendCommand(
                             DataToMCU.FID_APP_TEST_MODE,
                             byteArrayOf(
@@ -223,9 +224,10 @@ internal fun TestModeView() {
                                     .putShort(sOperGap.toShort()).array()
                             )
                         )
-                    }
-                },
-            ) { Text(text = "설정", fontSize = 16.sp) }
+                        }
+                    },
+                ) { Text(text = "설정", fontSize = 16.sp) }
+            }
         }
 
         Text(
