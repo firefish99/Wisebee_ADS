@@ -11,6 +11,13 @@ dependencies {
     implementation(project(":autodoor:spec"))
     implementation(project(":autodoor:ui"))
 
+    implementation(libs.nordic.theme)
     implementation(libs.nordic.uiscanner)
     implementation(libs.nordic.navigation)
+    implementation(libs.nordic.permission)
+
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.material.iconsExtended)
+
+    implementation(libs.nordic.scanner)
 }

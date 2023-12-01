@@ -16,7 +16,7 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from("no.nordicsemi.android.gradle:version-catalog:1.2.2")
+            from("no.nordicsemi.android.gradle:version-catalog:1.3.0")
         }
     }
 }
@@ -28,9 +28,9 @@ include(":autodoor:spec")
 include(":autodoor:ui")
 include(":autodoor:ble")
 
-if (file("../Android-Common-Libraries").exists()) {
-    includeBuild("../Android-Common-Libraries")
-}
+//if (file("../Android-Common-Libraries").exists()) {
+//    includeBuild("../Android-Common-Libraries")
+//}
 //if (file("../Android-BLE-Library").exists()) {
 //    includeBuild("../Android-BLE-Library")
 //}

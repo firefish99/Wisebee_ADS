@@ -1,4 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="scanner_title">LUXHOME AUTO</string>
+
+    <string name="action_grant_permission">권한 허용</string>
+    <string name="action_settings">설정</string>
+    <string name="action_enable">허용</string>
+    <string name="action_try_again">다시 시도</string>
+
+    <string name="bluetooth_disabled_title">블루투스 비활성화</string>
+    <string name="bluetooth_disabled_info">블루투스가 꺼져 있습니다..\n아래 버튼을 눌러 활성화 하십시오.</string>
+
+    <string name="location_permission_title">위치정보 사용권한이 필요합니다.</string>
+    <string name="location_permission_info">블루투스(BLE) 사용을 위해 안드로이드 6.0부터 11까지는 위치정보 사용권한이 필요합니다.
+        안드로이드 12부터는 근접위치 사용권한이 필요합니다.</string>
+
+    <string name="bluetooth_permission_title">블루투스 사용권한이 필요합니다.</string>
+    <string name="bluetooth_permission_info">이 앱은 블루투스 장치에 접속하기 위해 블루투스 사용권한이 필요합니다.</string>
+
+    <string name="bluetooth_not_available_title">블루투스 사용권한 없음</string>
+    <string name="bluetooth_not_available_info">블루투스 사용권한이 없어 블루투스 기능을 사용할 수 업습니다.</string>
+
+    <string name="internet_not_available_title">인터넷 사용권한이 필요합니다.</string>
+    <string name="internet_not_available_info">인터넷 접속을 다시 시도하십시오.</string>
+
+    <string name="location_required_title">위치정보 사용권한 필요</string>
+    <string name="bluetooth_required_title">블루투스 사용권한 필요</string>
+    <string name="internet_required_title">인터넷 사용권한 필요</string>
+
+    <string name="bluetooth">Bluetooth</string>
+    <string name="location">Location</string>
+
+    <string name="filters">Filters</string>
+    <string name="filter_uuid">All</string>
+    <string name="filter_nearby">Nearby</string>
+    <string name="filter_name">Name</string>
+
+    <string name="device_no_name">No name</string>
+    <string name="bonded_devices">Bonded devices</string>
+    <string name="discovered_devices">Discovered devices</string>
+
+    <string name="scan_failed">스캔 실패 에러코드=%d.</string>
+    <string name="scanner_screen">스캐너</string>
+    <string name="scanner_error">스캔 실패</string>
+    <string name="action_location_settings">위치 설정</string>
+    <string name="action_go_up">뒤로 가기</string>
+
+    <string name="no_device_guide_title">장치를 찾을 수 없을 때…</string>
+    <string name="no_device_guide_info">1. <b>전원</b>이 켜져 있는지 확인합니다.\n\n
+        2. 장치와 너무 멀리 떨어져 있는지 확인합니다.</string>
+    <string name="no_device_guide_location_info">3. 위치정보가 꺼져 있습니다. 아래 버튼을 눌러 위치설정을 활성화하시기 바랍니다.</string>
+
+    <string name="navigation_item_accessibility">App bar navigation back icon.</string>
+
+    <string name="bonding_in_progress">Bonding in progress. Please follow instruction on the screen.</string>
+    <string name="bonding_success">Bonding success. Please wait for the redirect to chosen profile screen.</string>
+    <string name="bonding_error">We cannot get data from the peripheral without bonding. Please bond the device.</string>
+
+    <string name="device_disconnected">Disconnected</string>
+    <string name="device_reason_user">Device disconnected successfully.</string>
+    <string name="device_reason_unknown">Device disconnected with unknown reason.</string>
+    <string name="device_reason_link_loss">Device signal has been lost.</string>
+    <string name="device_reason_missing_service">Device was disconnected, because required services are missing.</string>
+
+    <string name="device_connecting">연결중…</string>
+    <string name="device_explanation">자동문과 연결중입니다.</string>
+    <string name="device_please_wait">잠시만 기다려 주십시오.</string>
 </resources>
