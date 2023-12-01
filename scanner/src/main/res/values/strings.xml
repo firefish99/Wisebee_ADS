@@ -37,7 +37,7 @@
 
     <string name="device_no_name">No name</string>
     <string name="bonded_devices">Bonded devices</string>
-    <string name="discovered_devices">Discovered devices</string>
+    <string name="discovered_devices"> </string>
 
     <string name="scan_failed">스캔 실패 에러코드=%d.</string>
     <string name="scanner_screen">스캐너</string>
