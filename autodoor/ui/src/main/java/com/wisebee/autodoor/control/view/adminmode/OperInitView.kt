@@ -26,10 +26,10 @@ internal fun OperInitView() {
     val viewModel: AutoDoorViewModel = hiltViewModel()
 
     val packet = viewModel.rxPacket.collectAsStateWithLifecycle()
-    val nPowerCount = remember { mutableStateListOf(0, 0, 0, 3300) }
+    val nPowerCount = remember { mutableStateListOf(0, 0, 0) }
     var bPressed by remember { mutableStateOf( false ) }
-    if(packet.value[0] == DataToMCU.FID_APP_OPER_STAT && packet.value[1].toInt() >= (4*4 + 2)) {
-        for( i in 0..3)
+    if(packet.value[0] == DataToMCU.FID_APP_OPER_STAT && packet.value[1].toInt() >= (4*3 + 2)) {
+        for( i in 0..2)
             nPowerCount[i] = ByteBuffer.wrap(packet.value, 2 + i * 4, 4).order(ByteOrder.BIG_ENDIAN).int
     }
     else if(packet.value[0] == DataToMCU.FID_APP_SYS_COMMAND) {
@@ -37,12 +37,12 @@ internal fun OperInitView() {
         bPressed = false
         if(packet.value[1].toInt() >= (2 + 2)) {
             if (packet.value[2] == DataToMCU.CMD_INIT_OPER_STAT) {
-                for (i in 0..3)
+                for (i in 0..2)
                     nPowerCount[i] = 0
             }
         }
     }
-    //Timber.tag("OperStatView").e("${nPowerCount[0]}, ${nPowerCount[1]}, ${nPowerCount[2]}, ${nPowerCount[3]}")
+    //Timber.tag("OperStatView").e("${nPowerCount[0]}, ${nPowerCount[1]}, ${nPowerCount[2]}")
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -73,21 +73,21 @@ internal fun OperInitView() {
                 .wrapContentWidth()
         ) {
             Text(
-                text = "전원 인가 횟수 : ${String.format("%05d", nPowerCount[0])}", fontSize = 18.sp,
+                text = "전원 인가 횟수 : ${"%05d".format(nPowerCount[0])}", fontSize = 18.sp,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
                     .wrapContentWidth()
                     .padding(top = 20.dp, bottom = 20.dp)
             )
             Text(
-                text = "문 열림 횟수 : ${String.format("%05d", nPowerCount[1])}", fontSize = 18.sp,
+                text = "문 열림 횟수 : ${"%05d".format(nPowerCount[1])}", fontSize = 18.sp,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
                     .wrapContentWidth()
                     .padding(bottom = 20.dp)
             )
             Text(
-                text = "문 충돌 횟수 : ${String.format("%05d", nPowerCount[2])}", fontSize = 18.sp,
+                text = "문 충돌 횟수 : ${"%05d".format(nPowerCount[2])}", fontSize = 18.sp,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
                     .wrapContentWidth()

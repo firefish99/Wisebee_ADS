@@ -90,7 +90,7 @@ internal fun AdminParamView() {
                 viewModel.sendCommand(DataToMCU.FID_APP_BLE_COMMAND, DataToMCU.CMD_GET_BLE_STATUS)
                 viewModel.setDisplay(AutoDoor.DisplayView.VIEW_MAIN_BLE)
             },
-        ) { Text(text = "컨트롤보드 BLE 설정", fontSize = 20.sp) }
+        ) { Text(text = "보드,버튼 BLE 설정", fontSize = 20.sp) }
         Button(
             enabled = true,
             modifier = Modifier

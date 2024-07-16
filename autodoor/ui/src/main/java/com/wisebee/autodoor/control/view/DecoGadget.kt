@@ -72,6 +72,34 @@ internal fun StartButton(
 }
 
 @Composable
+internal fun SmallButton(
+    modifier: Modifier = Modifier,
+    button: String = "",
+    pressed: Boolean = false,
+    onClick : () -> Unit = { },
+) {
+    Box(
+        modifier = modifier
+            .background(
+                color = WbTheme.getButtonContainer(pressed),
+                shape = RoundedCornerShape(10.dp)
+            )
+            .padding(horizontal = 10.dp)
+            .wrapContentWidth()
+            //.wrapContentHeight()
+            .height(22.dp)
+            .clickable { onClick() },
+        contentAlignment = Alignment.CenterStart
+    ) {
+        Text(
+            text = button,
+            fontSize = 14.sp,
+            color = WbTheme.getButtonContent(pressed),
+        )
+    }
+}
+
+@Composable
 internal fun ParamInput(
     modifier: Modifier = Modifier,
     name: String = "",
@@ -347,6 +375,8 @@ private fun SimpleParamInputPreview() {
             RefreshButton()
             Spacer(modifier = Modifier.padding(horizontal = 20.dp))
             StartButton(button = "시작")
+            Spacer(modifier = Modifier.padding(vertical = 2.dp))
+            SmallButton(button = "Enable")
             Spacer(modifier = Modifier.padding(horizontal = 20.dp))
             ParamInput(name = "문닫힘대기 시간", value = 1000, unit = 200, valueRange = 0f..2000f)
             Spacer(modifier = Modifier.padding(horizontal = 20.dp))

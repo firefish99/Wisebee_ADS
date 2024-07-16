@@ -96,6 +96,7 @@ class DataToMCU private constructor() {
         const val CMD_GET_BLE_STATUS : Byte = 0x00
         const val CMD_CLEAR_BUTTON_MAC : Byte = 0x01
         const val CMD_RESET_BLE_MODULE : Byte = 0x02
+        const val CMD_ENABLE_BLE_BUTTON : Byte = 0x03
 
         //FID_APP_RW_BLOCK
         const val BLE_RW_INITIAL_CMD : Byte = 0x01
