@@ -3,8 +3,11 @@ package com.wisebee.autodoor.control.view.usermode
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,17 +30,41 @@ internal fun OperStatView() {
     val viewModel: AutoDoorViewModel = hiltViewModel()
 
     val packet = viewModel.rxPacket.collectAsStateWithLifecycle()
-    val nPowerCount = remember { mutableStateListOf(0, 0, 0, 3300) }
-    if(packet.value[0] == DataToMCU.FID_APP_OPER_STAT && packet.value[1].toInt() >= (4*4 + 2)) {
-        for( i in 0..3)
-            nPowerCount[i] = ByteBuffer.wrap(packet.value, 2 + i * 4, 4).order(ByteOrder.BIG_ENDIAN).int
-        nPowerCount[3] = nPowerCount[3].and(0x7fff)
+    val nPowerCount = remember { mutableStateListOf(0, 0, 0, 3300, 3300) }
+    var bNewVersion by remember { mutableStateOf(false) }
+    val bEnabled = remember { mutableStateListOf( true, false ) }
+    if(packet.value[0] == DataToMCU.FID_APP_OPER_STAT) {
+        if(packet.value[1].toInt() >= (4*5 + 2)) {
+            for (i in 0..4) {
+                nPowerCount[i] =
+                    ByteBuffer.wrap(packet.value, 2 + i * 4, 4).order(ByteOrder.BIG_ENDIAN).int
+            }
+            bNewVersion = true
+            bEnabled[0] = nPowerCount[3].and(0xff0000) != 0
+            bEnabled[1] = nPowerCount[4].and(0xff0000) != 0
+            nPowerCount[3] = nPowerCount[3].and(0x7fff)
+            nPowerCount[4] = nPowerCount[4].and(0x7fff)
+        }
+        else if(packet.value[1].toInt() >= (4*4 + 2)) {
+            for (i in 0..3) {
+                nPowerCount[i] =
+                    ByteBuffer.wrap(packet.value, 2 + i * 4, 4).order(ByteOrder.BIG_ENDIAN).int
+            }
+            bNewVersion = false
+            bEnabled[0] = true
+            bEnabled[1] = false
+            nPowerCount[3] = nPowerCount[3].and(0x7fff)
+            nPowerCount[4] = 0
+        }
     }
     //Timber.tag("OperStatView").e("${nPowerCount[0]}, ${nPowerCount[1]}, ${nPowerCount[2]}, ${nPowerCount[3]}")
 
-    val nPercent = if (nPowerCount[3] < 0) 0
+    val nPercent1 = if (nPowerCount[3] < 0) 0
         else if(nPowerCount[3] > 3000) 100
         else ((nPowerCount[3] - 0f) * 100f / (3000f - 0f)).roundToInt()
+    val nPercent2 = if (nPowerCount[4] < 0) 0
+        else if(nPowerCount[4] > 3000) 100
+        else ((nPowerCount[4] - 0f) * 100f / (3000f - 0f)).roundToInt()
 
     Column (
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -67,34 +94,44 @@ internal fun OperStatView() {
                 .wrapContentWidth()
         ) {
             Text(
-                text = "전원 인가 횟수 : ${String.format("%05d", nPowerCount[0])}", fontSize = 18.sp,
+                text = "전원 인가 횟수 : ${"%05d".format(nPowerCount[0])}", fontSize = 18.sp,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
                     .wrapContentWidth()
                     .padding(top = 20.dp, bottom = 20.dp)
             )
             Text(
-                text = "문 열림 횟수 : ${String.format("%05d", nPowerCount[1])}", fontSize = 18.sp,
+                text = "문 열림 횟수 : ${"%05d".format(nPowerCount[1])}", fontSize = 18.sp,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
                     .wrapContentWidth()
                     .padding(bottom = 20.dp)
             )
             Text(
-                text = "문 충돌 횟수 : ${String.format("%05d", nPowerCount[2])}", fontSize = 18.sp,
+                text = "문 충돌 횟수 : ${"%05d".format(nPowerCount[2])}", fontSize = 18.sp,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
                     .wrapContentWidth()
                     .padding(bottom = 20.dp)
             )
             Text(
-                text = "실내버튼 배터리 : ${String.format("%d%%", nPercent)}", fontSize = 18.sp,
-                color = if (nPowerCount[3] < 1000) Color.Red else Color.Unspecified,
+                text = "실내버튼#1 배터리 : ${"%d".format(nPercent1)}%", fontSize = 18.sp,
+                color = if(!bEnabled[0]) Color.Gray else if (nPowerCount[3] < 1000) Color.Red else Color.Unspecified,
                 modifier = Modifier
                     .align(alignment = Alignment.Start)
                     .wrapContentWidth()
                     .padding(bottom = 0.dp)
             )
+            if(bNewVersion) {
+                Text(
+                    text = "실내버튼#2 배터리 : ${"%d".format(nPercent2)}%", fontSize = 18.sp,
+                    color = if (!bEnabled[1]) Color.Gray else if (nPowerCount[4] < 1000) Color.Red else Color.Unspecified,
+                    modifier = Modifier
+                        .align(alignment = Alignment.Start)
+                        .wrapContentWidth()
+                        .padding(bottom = 0.dp)
+                )
+            }
         }
     }
 }
