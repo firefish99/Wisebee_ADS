@@ -35,7 +35,8 @@ internal fun ControllerBLEView() {
     var bNewVersion by remember { mutableStateOf(false) }
     val battery = remember { mutableStateListOf( 3300, 3300 ) }
     val bEnabled = remember { mutableStateListOf( true, false ) }
-    val bPressed = remember { mutableStateListOf( false, false, false, false ) }
+    val bIRFunction = remember { mutableStateListOf( false, false ) }                // function view/hide, enable/disable
+    val bPressed = remember { mutableStateListOf( false, false, false, false, false ) }
 
     if(packet.value[0] == DataToMCU.FID_APP_BLE_COMMAND && packet.value[1].toInt() >= 3) {
         packet.value[0] = DataToMCU.FID_APP_NONE
@@ -66,6 +67,16 @@ internal fun ControllerBLEView() {
                     battery[0] = battery[0].and(0x7fff)
                     battery[1] = 0
                 }
+
+                if(packet.value[1].toInt() >= ((1 + 2 + 6 + 1) * 2 + 2 + 1)) {          // BLE-main : 1.2.3 부터
+                    bIRFunction[0] = true
+                    bIRFunction[1] = packet.value[21] == 1.toByte() || packet.value[22] == 1.toByte()
+                }
+                else {                                                                  // BLE-main : 1.2.3 이전 버전
+                    bIRFunction[0] = false
+                    bIRFunction[1] = false
+                }
+
                 /*
                 if(packet.value[1].toInt() >= (2 + 6 + 2 + 1)) {
                     for (i in 0 until 6)
@@ -86,6 +97,11 @@ internal fun ControllerBLEView() {
                 nDispRes = nResult
             }
             DataToMCU.CMD_ENABLE_BLE_BUTTON -> {
+                nResult  = packet.value[3].toInt()
+                nDispRes = nResult
+                viewModel.sendCommand(DataToMCU.FID_APP_BLE_COMMAND, DataToMCU.CMD_GET_BLE_STATUS)
+            }
+            DataToMCU.CMD_ENABLE_IR_BUTTON -> {
                 nResult  = packet.value[3].toInt()
                 nDispRes = nResult
                 viewModel.sendCommand(DataToMCU.FID_APP_BLE_COMMAND, DataToMCU.CMD_GET_BLE_STATUS)
@@ -246,6 +262,46 @@ internal fun ControllerBLEView() {
                 )
             }
 
+            if(bIRFunction[0]) {
+                Column(
+                    modifier = Modifier
+                        .align(alignment = Alignment.Start)
+                        .padding(top = 8.dp, bottom = 8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .align(alignment = Alignment.Start)
+                            .wrapContentWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    )
+                    {
+                        Text(
+                            text = "IR 버튼", fontSize = 18.sp,
+                            color = if(!bIRFunction[1]) Color.Gray else Color.Unspecified,
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .padding(end = 10.dp)
+                        )
+                        SmallButton(
+                            modifier = Modifier
+                                .width(80.dp),
+                            pressed = bPressed[4],
+                            button = if(bIRFunction[1]) "Disable" else "Enable"
+                        ) {
+                            bPressed[4] = true
+                            viewModel.sendCommand(DataToMCU.FID_APP_BLE_COMMAND,
+                                (if(bIRFunction[1]) byteArrayOf(DataToMCU.CMD_ENABLE_IR_BUTTON,0,0) else byteArrayOf(DataToMCU.CMD_ENABLE_IR_BUTTON,1,1)) )
+                        }
+                    }
+                }
+                Divider (
+                    color = Color.Black,
+                    modifier = Modifier
+                        .height(1.dp)
+                        .fillMaxWidth()
+                )
+            }
+
             Row(
                 modifier = Modifier
                     .padding(top = 16.dp)
@@ -283,6 +339,8 @@ internal fun ControllerBLEView() {
                 2 -> "BLE 보드가 리셋됩니다. 재 연결 하시기 바랍니다."
                 3 -> "BLE 버튼이 비활성화 되었습니다."
                 4 -> "BLE 버튼이 활성화 되었습니다."
+                5 -> "IR 버튼이 비활성화 되었습니다."
+                6 -> "IR 버튼이 활성화 되었습니다."
                 else -> ""
             },
             fontSize = 16.sp,

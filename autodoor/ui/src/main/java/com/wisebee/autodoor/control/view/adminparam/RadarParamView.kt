@@ -88,8 +88,8 @@ internal fun RadarParamView() {
             SimpleParamInput(name="알파 계수", value=nParamValue[3], valueRange=0f..255f, unit=1) {nParamValue[3]=it.roundToInt()}
             SimpleParamInput(name="감지 민감도", value=nParamValue[4], valueRange=0f..4095f, unit=1) {nParamValue[4]=it.roundToInt()}
             SimpleParamInput(name="안정 계수", value=nParamValue[5], valueRange=0f..255f, unit=1) {nParamValue[5]=it.roundToInt()}
-            SimpleParamInput(name="감지 최소 거리", value=nParamValue[6], valueRange=10f..2000f, unit=1) {nParamValue[6]=it.roundToInt()}
-            SimpleParamInput(name="감지 최대 거리", value=nParamValue[7], valueRange=10f..2000f, unit=1) {nParamValue[7]=it.roundToInt()}
+            SimpleParamInput(name="감지 최소 거리", value=nParamValue[6], valueRange=10f..2000f, unit=10) {nParamValue[6]=it.roundToInt()}
+            SimpleParamInput(name="감지 최대 거리", value=nParamValue[7], valueRange=10f..2000f, unit=10) {nParamValue[7]=it.roundToInt()}
             SimpleParamInput(name="캘리브레이션 대기시간 1", value=nParamValue[8], valueRange=5f..20f, unit=1) {nParamValue[8]=it.roundToInt()}
             SimpleParamInput(name="캘리브레이션 대기시간 2", value=nParamValue[9], valueRange=5f..20f, unit=1) {nParamValue[9]=it.roundToInt()}
             SimpleParamInput(name="캘리브레이션 스캔시간", value=nParamValue[10], valueRange=1f..5f, unit=1) {nParamValue[10]=it.roundToInt()}

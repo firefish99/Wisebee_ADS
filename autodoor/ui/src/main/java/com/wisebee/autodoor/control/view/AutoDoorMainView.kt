@@ -74,6 +74,7 @@ internal fun AutoDoorMainView(
                 AutoDoor.DisplayView.VIEW_DCM -> DCMParamView()
                 AutoDoor.DisplayView.VIEW_BLDC -> BLDCParamView()
                 AutoDoor.DisplayView.VIEW_HLED -> HLEDView()
+                AutoDoor.DisplayView.VIEW_VOICE -> VoiceView()
                 AutoDoor.DisplayView.VIEW_USER_MAIN_BLE -> UserBLEView()
                 AutoDoor.DisplayView.VIEW_USER_CALIBRATION -> CalibrationView()
                 AutoDoor.DisplayView.VIEW_USER_REBOOT -> UserRebootView()

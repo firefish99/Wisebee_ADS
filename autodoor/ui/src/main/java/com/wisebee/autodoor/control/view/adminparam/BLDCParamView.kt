@@ -16,6 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wisebee.autodoor.ble.data.DataToMCU
 import com.wisebee.autodoor.control.WbTheme
 import com.wisebee.autodoor.control.view.RefreshButton
+import com.wisebee.autodoor.control.view.SimpleOpenGapInput
 import com.wisebee.autodoor.control.view.SimpleParamInput
 import com.wisebee.autodoor.control.viewmodel.AutoDoorViewModel
 import no.nordicsemi.android.common.theme.NordicTheme
@@ -97,7 +98,7 @@ internal fun BLDCParamView() {
             SimpleParamInput(name="열림 가속 단위시간", value=nParamValue[14], valueRange=100f..1000f,unit=100) {nParamValue[14]=it.roundToInt()}
             SimpleParamInput(name="열림 감속도", value=nParamValue[15], valueRange=100f..500f, unit=100) {nParamValue[15]=it.roundToInt()}
             SimpleParamInput(name="열림 감속 단위시간", value=nParamValue[16], valueRange=100f..1000f,unit=100) {nParamValue[16]=it.roundToInt()}
-            SimpleParamInput(name="열림 갭", value=nParamValue[17], valueRange=100f..1000f,unit=100) {nParamValue[17]=it.roundToInt()}
+            SimpleOpenGapInput(name="열림 갭", value=nParamValue[17], valueRange=0f..1000f,unit=50) {nParamValue[17]=it.roundToInt()}
             SimpleParamInput(name="문닫힘 대기시간", value=nParamValue[18], valueRange=1000f..10000f,unit=100) {nParamValue[18]=it.roundToInt()}
             SimpleParamInput(name="닫힘 속도", value=nParamValue[19], valueRange=500f..2800f, unit=100) {nParamValue[19]=it.roundToInt()}
             SimpleParamInput(name="닫힘 가속도", value=nParamValue[20], valueRange=100f..500f, unit=100) {nParamValue[20]=it.roundToInt()}
@@ -133,7 +134,7 @@ internal fun BLDCParamView() {
                 bPressed = true
                 val nSendParam = nParamValue.foldIndexed(ByteArray(nParamValue.size * 2)) { index, bytes, param ->
                     bytes.apply {
-                        ByteBuffer.allocate(2).order(ByteOrder.BIG_ENDIAN).putShort(param.toShort()).array().copyInto(bytes, index * 2)
+                        ByteBuffer.allocate(2).order(ByteOrder.BIG_ENDIAN).putShort((if(index==17 && param<30) 30 else param).toShort()).array().copyInto(bytes, index * 2)
                     }
                 }
                 viewModel.sendCommand(

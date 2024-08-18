@@ -1,5 +1,6 @@
 package com.wisebee.autodoor.control.view
 
+import android.provider.CalendarContract.Colors
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -176,6 +177,7 @@ internal fun ParamInput(
 internal fun SimpleParamInput(
     modifier: Modifier = Modifier,
     name: String = "",
+    enabled: Boolean = true,
     value: Int = 0,
     valueRange :  ClosedFloatingPointRange<Float> = 0f..10f,
     unit : Int = 1,
@@ -203,6 +205,162 @@ internal fun SimpleParamInput(
                 modifier = Modifier
                     .wrapContentWidth()
             )
+        }
+
+        val interactionSource = remember { MutableInteractionSource() }
+        val dragged = interactionSource.collectIsDraggedAsState()
+
+        Slider(
+            enabled = enabled,
+            value = value.toFloat(),
+            onValueChange = {
+                if(dragged.value)
+                    onValueChange(it)
+            },
+            valueRange = valueRange,
+            steps = lsteps,
+            interactionSource = interactionSource,
+            thumb = remember(interactionSource) { {
+                SliderDefaults.Thumb(
+                    modifier = Modifier.padding(top = 3.dp),
+                    interactionSource = interactionSource,
+                    colors = SliderDefaults.colors(),
+                    thumbSize = DpSize(15.dp, 15.dp),
+                    enabled = true
+                )
+            } },
+        )
+    }
+}
+
+@Composable
+internal fun OpenGapInput(
+    modifier: Modifier = Modifier,
+    name: String = "",
+    value: Int = 0,
+    button: String = "전 송",
+    pressed: Boolean = false,
+    onClick : () -> Unit = { },
+    valueRange :  ClosedFloatingPointRange<Float> = 0f..10f,
+    unit : Int = 1,
+    steps : Int = -1,
+    onValueChange : (Float) -> Unit = { },
+) {
+    val lsteps = if(unit == 1) 0
+    else if(steps != -1) steps
+    else ((valueRange.endInclusive - valueRange.start) / unit).toInt() - 1
+
+    Column (
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy((-15).dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(horizontal = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "$name : ${if(value < 30) 30 else value}", fontSize = 18.sp,
+                modifier = Modifier
+                    .wrapContentWidth()
+            )
+            if(value < 150)
+                Text(
+                    text = "수동문열림유지 off", fontSize = 16.sp,
+                    color = Color(0x80,0x20,0x20),
+                    modifier = Modifier
+                        .wrapContentWidth()
+                )
+
+            Box(
+                modifier = Modifier
+                    .background(
+                        color = WbTheme.getButtonContainer(pressed),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                    .padding(horizontal = 10.dp, vertical = 4.dp)
+                    .wrapContentWidth()
+                    //.wrapContentHeight()
+                    .height(30.dp)
+                    .weight(1f, false)
+                    .clickable { onClick() },
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = button,
+                    fontSize = 16.sp,
+                    color = WbTheme.getButtonContent(pressed),
+                )
+            }
+        }
+
+        val interactionSource = remember { MutableInteractionSource() }
+        val dragged = interactionSource.collectIsDraggedAsState()
+
+        Slider(
+            value = value.toFloat(),
+            onValueChange = {
+                if(dragged.value)
+                    onValueChange(it)
+            },
+            valueRange = valueRange,
+            steps = lsteps,
+            interactionSource = interactionSource,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun SimpleOpenGapInput(
+    modifier: Modifier = Modifier,
+    name: String = "",
+    value: Int = 0,
+    valueRange :  ClosedFloatingPointRange<Float> = 0f..10f,
+    unit : Int = 1,
+    steps : Int = -1,
+    onValueChange : (Float) -> Unit = { },
+) {
+    val lsteps = if(unit == 1) 0
+    else if(steps != -1) steps
+    else ((valueRange.endInclusive - valueRange.start) / unit.toFloat()).toInt() - 1
+
+    Column (
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy((-22).dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(horizontal = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(horizontal = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "$name : ${if (value < 30) 30 else value}", fontSize = 16.sp,
+                    modifier = Modifier
+                        .wrapContentWidth()
+                )
+                if (value < 150)
+                    Text(
+                        text = "수동문열림유지 off", fontSize = 16.sp,
+                        color = Color(0x80, 0x20, 0x20),
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .padding(start=30.dp)
+                    )
+            }
         }
 
         val interactionSource = remember { MutableInteractionSource() }
@@ -381,6 +539,10 @@ private fun SimpleParamInputPreview() {
             ParamInput(name = "문닫힘대기 시간", value = 1000, unit = 200, valueRange = 0f..2000f)
             Spacer(modifier = Modifier.padding(horizontal = 20.dp))
             SimpleParamInput(name = "문닫힘대기 시간", value = 500, unit = 100, valueRange = 100f..2000f)
+            Spacer(modifier = Modifier.padding(horizontal = 20.dp))
+            OpenGapInput(name = "열림 갭", value = 100, unit = 50, valueRange = 0f..1000f)
+            Spacer(modifier = Modifier.padding(horizontal = 20.dp))
+            SimpleOpenGapInput(name = "열림 갭", value = 100, unit = 50, valueRange = 0f..1000f)
             Spacer(modifier = Modifier.padding(horizontal = 20.dp))
             ParamSwitch(name = "워치독 활성화", value = true)
             ParamSwitch(name = "워치독 활성화", value = false)

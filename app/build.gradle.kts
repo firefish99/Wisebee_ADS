@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId = "com.wisebee.autodoor"
         versionCode=16
-        versionName="1.2.2"
+        versionName="1.2.3"
         resourceConfigurations.add("en")
     }
 }

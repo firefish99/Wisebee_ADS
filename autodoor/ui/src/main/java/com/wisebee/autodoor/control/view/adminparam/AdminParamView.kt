@@ -77,6 +77,16 @@ internal fun AdminParamView() {
                 .fillMaxWidth()
                 .padding(horizontal = 50.dp),
             onClick = {
+                viewModel.sendCommand(DataToMCU.FID_APP_RW_BLOCK, DataToMCU.BLE_RW_VOICE_CMD.or(DataToMCU.BLE_RW_READ))
+                viewModel.setDisplay(AutoDoor.DisplayView.VIEW_VOICE)
+            },
+        ) { Text(text = "음성인식 설정", fontSize = 20.sp) }
+        Button(
+            enabled = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 50.dp),
+            onClick = {
                 viewModel.sendCommand(DataToMCU.FID_APP_RW_BLOCK, DataToMCU.BLE_RW_RADAR_CMD.or(DataToMCU.BLE_RW_READ))
                 viewModel.setDisplay(AutoDoor.DisplayView.VIEW_RADAR)
             },

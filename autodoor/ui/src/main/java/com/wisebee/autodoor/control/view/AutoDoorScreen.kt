@@ -73,6 +73,7 @@ internal fun AutoDoorScreen(
             AutoDoor.DisplayView.VIEW_MAIN_BLE,
             AutoDoor.DisplayView.VIEW_DCM,
             AutoDoor.DisplayView.VIEW_BLDC,
+            AutoDoor.DisplayView.VIEW_VOICE,
             AutoDoor.DisplayView.VIEW_HLED -> viewModel.setDisplay(AutoDoor.DisplayView.VIEW_ADMIN_PARAM)
         }
     }

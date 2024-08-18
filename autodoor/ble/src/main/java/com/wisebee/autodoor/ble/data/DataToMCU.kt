@@ -97,6 +97,7 @@ class DataToMCU private constructor() {
         const val CMD_CLEAR_BUTTON_MAC : Byte = 0x01
         const val CMD_RESET_BLE_MODULE : Byte = 0x02
         const val CMD_ENABLE_BLE_BUTTON : Byte = 0x03
+        const val CMD_ENABLE_IR_BUTTON : Byte = 0x04
 
         //FID_APP_RW_BLOCK
         const val BLE_RW_INITIAL_CMD : Byte = 0x01
@@ -107,6 +108,7 @@ class DataToMCU private constructor() {
         const val BLE_RW_DCM_CMD : Byte = 0x06
         const val BLE_RW_BLDC_CMD : Byte = 0x07
         const val BLE_RW_HLED_CMD : Byte = 0x08
+        const val BLE_RW_VOICE_CMD : Byte = 0x09
         const val BLE_RW_CMD_MASK : Byte = 0x3f
         const val BLE_RW_READ : Byte = 0x00
         const val BLE_RW_WRITE : Byte = 0x40
